@@ -36,7 +36,7 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title "VOC Bricklet"
-Date "2017-11-13"
+Date "2018-01-08"
 Rev "1.0"
 Comp "Tinkerforge GmbH"
 Comment1 "Licensed under CERN OHL v.1.1"
@@ -45,7 +45,7 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 Text Notes 550  7700 0    40   ~ 0
-Copyright Tinkerforge GmbH 2017.\nThis documentation describes Open Hardware and is licensed under the\nCERN OHL v. 1.1.\nYou may redistribute and modify this documentation under the terms of the\nCERN OHL v.1.1. (http://ohwr.org/cernohl). This documentation is distributed\nWITHOUT ANY EXPRESS OR IMPLIED WARRANTY, INCLUDING OF\nMERCHANTABILITY, SATISFACTORY QUALITY AND FITNESS FOR A\nPARTICULAR PURPOSE. Please see the CERN OHL v.1.1 for applicable\nconditions\n
+Copyright Tinkerforge GmbH 2018.\nThis documentation describes Open Hardware and is licensed under the\nCERN OHL v. 1.1.\nYou may redistribute and modify this documentation under the terms of the\nCERN OHL v.1.1. (http://ohwr.org/cernohl). This documentation is distributed\nWITHOUT ANY EXPRESS OR IMPLIED WARRANTY, INCLUDING OF\nMERCHANTABILITY, SATISFACTORY QUALITY AND FITNESS FOR A\nPARTICULAR PURPOSE. Please see the CERN OHL v.1.1 for applicable\nconditions\n
 $Comp
 L DRILL U103
 U 1 1 4C6050A5
