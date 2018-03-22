@@ -282,7 +282,7 @@ uint16_t voc_state_load(uint8_t *data) {
 	}
 
 	bootloader_read_eeprom_page(VOC_STATE_DATA2_PAGE, page);
-	memcpy(data, page, BSEC_MAX_PROPERTY_BLOB_SIZE-EEPROM_PAGE_SIZE);
+	memcpy(data+EEPROM_PAGE_SIZE, page, BSEC_MAX_PROPERTY_BLOB_SIZE-EEPROM_PAGE_SIZE);
 	for(uint8_t i = 0; i < (BSEC_MAX_PROPERTY_BLOB_SIZE-EEPROM_PAGE_SIZE)/sizeof(uint32_t); i++) {
 		checksum ^= page[i];
 	}
@@ -312,13 +312,9 @@ void voc_state_save(uint8_t *data, const uint16_t length) {
 		checksum ^= page[i];
 	}
 
-	bootloader_write_eeprom_page(VOC_STATE_DATA1_PAGE, page);
-
-
 	// Write second data page and calculate checksum
 	memset(page, 0, EEPROM_PAGE_SIZE);
 	memcpy(page, data + EEPROM_PAGE_SIZE, BSEC_MAX_PROPERTY_BLOB_SIZE-EEPROM_PAGE_SIZE);
-	bootloader_write_eeprom_page(VOC_STATE_DATA2_PAGE, page);
 	for(uint8_t i = 0; i < (BSEC_MAX_PROPERTY_BLOB_SIZE-EEPROM_PAGE_SIZE)/sizeof(uint32_t); i++) {
 		checksum ^= page[i];
 	}
@@ -351,10 +347,14 @@ void voc_tick_task_init(void) {
 
 	uint16_t length = voc_state_load(bsec_state);
     if(length != 0) {
-        bsec_library_return_t status = bsec_set_state(bsec_state, BSEC_MAX_PROPERTY_BLOB_SIZE, bsec_state_work_buffer, BSEC_MAX_PROPERTY_BLOB_SIZE);     
+        bsec_library_return_t status = bsec_set_state(bsec_state, length, bsec_state_work_buffer, BSEC_MAX_PROPERTY_BLOB_SIZE);
         if(status != BSEC_OK) {
 			logw("Unexpected status during state set: %d\n\r", status);
+        } else {
+        	logd("BSEC state read from flash\n\r");
         }
+    } else {
+    	logd("No BSEC state found in flash\n\r");
     }
 
     bsec_sensor_configuration_t requested_virtual_sensors[9];
@@ -428,6 +428,7 @@ void voc_tick_task(void) {
 			bsec_library_return_t status = bsec_get_state(0, bsec_state, BSEC_MAX_PROPERTY_BLOB_SIZE, bsec_state_work_buffer, BSEC_MAX_PROPERTY_BLOB_SIZE, &bsec_state_length);
 			if(status == BSEC_OK) {
 	            voc_state_save(bsec_state, bsec_state_length);
+	            logd("New state saved, time: %u\n\r", timestamp_state);
 			} else {
 				logw("Unexpected status during state save: %d\n\r", status);
 			}
