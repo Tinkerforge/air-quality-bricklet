@@ -176,13 +176,13 @@ void voc_task_bsec_read_data(int64_t time_stamp_trigger, bsec_input_t *inputs, u
                 // Add optional heatsource input which will be subtracted from the temperature reading to
                 // compensate for device-specific self-heating (supported in BSEC IAQ solution)
 
-                // In our tests we found that the XMC1400 adds about 3.2°C above ambient to the
+                // In our tests we found that the XMC1400 adds about 3.5°C above ambient to the
                 // temperature of the circuit board (tested in room temperature conditions).
 				//
 				// Additionally we add the user defined offset. This is useful if the Bricklet
 				// is mounted in an enclosure with additional heat sources (for example).
                 inputs[*num_bsec_inputs].sensor_id = BSEC_INPUT_HEATSOURCE;
-                inputs[*num_bsec_inputs].signal = 3.2 + voc.temperature_offset;
+                inputs[*num_bsec_inputs].signal = 3.5 + voc.temperature_offset;
                 inputs[*num_bsec_inputs].time_stamp = time_stamp_trigger;
                 (*num_bsec_inputs)++;
             }
