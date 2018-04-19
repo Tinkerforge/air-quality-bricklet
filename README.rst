@@ -1,5 +1,5 @@
-VOC Bricklet
-============
+Air Quality Bricklet
+====================
 
  *This Bricklet is currently in development*
 

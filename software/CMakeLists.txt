@@ -2,7 +2,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake_config_custom.txt)
 
-SET(PROJECT_NAME voc-bricklet)
+SET(PROJECT_NAME air-quality-bricklet)
 SET(CHIP_FAMILY XMC1)
 SET(MCU cortex-m0\ -mthumb)
 PROJECT(${PROJECT_NAME})
