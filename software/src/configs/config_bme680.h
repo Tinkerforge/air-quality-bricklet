@@ -1,4 +1,4 @@
-/* voc-bricklet
+/* air-quality-bricklet
  * Copyright (C) 2017 Olaf Lüke <olaf@tinkerforge.com>
  *
  * config_bme680.h: BME680 sensor configuration

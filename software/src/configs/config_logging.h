@@ -1,4 +1,4 @@
-/* voc-bricklet
+/* air-quality-bricklet
  * Copyright (C) 2017 Olaf Lüke <olaf@tinkerforge.com>
  *
  * config_logging.h: Logging configuration for VOC Bricklet

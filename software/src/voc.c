@@ -1,7 +1,7 @@
-/* voc-bricklet
+/* air-quality-bricklet
  * Copyright (C) 2017 Olaf Lüke <olaf@tinkerforge.com>
  *
- * voc.c: VOC Bricklet read/write state machine
+ * voc.c: Air Quality Bricklet read/write state machine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

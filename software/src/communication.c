@@ -1,4 +1,4 @@
-/* voc-bricklet
+/* air-quality-bricklet
  * Copyright (C) 2018 Olaf Lüke <olaf@tinkerforge.com>
  *
  * communication.c: TFP protocol message handling

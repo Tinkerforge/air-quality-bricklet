@@ -1,7 +1,7 @@
-/* voc-bricklet
+/* air-quality-bricklet
  * Copyright (C) 2017 Olaf Lüke <olaf@tinkerforge.com>
  *
- * main.c: Initialization for VOC Bricklet
+ * main.c: Initialization for Air Quality Bricklet
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -32,7 +32,7 @@
 
 int main(void) {
 	logging_init();
-	logd("Start VOC Bricklet\n\r");
+	logd("Start Air Quality Bricklet\n\r");
 
 	communication_init();
 	voc_init();
