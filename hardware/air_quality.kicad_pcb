@@ -1,4 +1,4 @@
-(kicad_pcb (version 4) (host pcbnew 4.0.7-e2-6376~58~ubuntu17.04.1)
+(kicad_pcb (version 4) (host pcbnew 4.0.7-e2-6376~61~ubuntu18.04.1)
 
   (general
     (links 48)
@@ -23,7 +23,7 @@
   )
 
   (layers
-    (0 F.Cu signal hide)
+    (0 F.Cu signal)
     (31 B.Cu signal hide)
     (32 B.Adhes user)
     (33 F.Adhes user)
@@ -76,7 +76,8 @@
     (pad_size 0.8001 0.8001)
     (pad_drill 0.6)
     (pad_to_mask_clearance 0)
-    (aux_axis_origin 0 0)
+    (aux_axis_origin 135.1 128.5)
+    (grid_origin 135.1 128.5)
     (visible_elements FFFFFF7F)
     (pcbplotparams
       (layerselection 0x00010_00000000)
@@ -6756,7 +6757,7 @@
   (gr_text "Copyright Tinkerforge GmbH 2017.\nThis documentation describes Open Hardware and is licensed under the\nCERN OHL v. 1.1.\nYou may redistribute and modify this documentation under the terms of the\nCERN OHL v.1.1. (http://ohwr.org/cernohl). This documentation is distributed\nWITHOUT ANY EXPRESS OR IMPLIED WARRANTY, INCLUDING OF\nMERCHANTABILITY, SATISFACTORY QUALITY AND FITNESS FOR A\nPARTICULAR PURPOSE. Please see the CERN OHL v.1.1 for applicable\nconditions" (at 251.55 152) (layer Cmts.User)
     (effects (font (size 0.8 0.8) (thickness 0.15)))
   )
-  (gr_text status (at 137.14 147.36) (layer F.SilkS)
+  (gr_text Status (at 137.14 147.36) (layer F.SilkS)
     (effects (font (size 0.7 0.7) (thickness 0.15)))
   )
   (gr_text "Air Quality\n1.0" (at 147.6 147) (layer F.SilkS)
