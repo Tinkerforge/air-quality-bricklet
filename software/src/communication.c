@@ -28,11 +28,11 @@
 
 #include "voc.h"
 
-CallbackValue callback_value_humidity;
-CallbackValue callback_value_temperature;
-CallbackValue callback_value_air_pressure;
-CallbackValue callback_value_iaq_index;
-
+// FIXME: use a different data types, now that callback-value supports that?
+CallbackValue_int32_t callback_value_humidity;
+CallbackValue_int32_t callback_value_temperature;
+CallbackValue_int32_t callback_value_air_pressure;
+CallbackValue_int32_t callback_value_iaq_index;
 
 BootloaderHandleMessageResponse handle_message(const void *message, void *response) {
 	switch(tfp_get_fid_from_message(message)) {
@@ -41,22 +41,21 @@ BootloaderHandleMessageResponse handle_message(const void *message, void *respon
 		case FID_GET_TEMPERATURE_OFFSET: return get_temperature_offset(message, response);
 		case FID_SET_ALL_VALUES_CALLBACK_CONFIGURATION: return set_all_values_callback_configuration(message);
 		case FID_GET_ALL_VALUES_CALLBACK_CONFIGURATION: return get_all_values_callback_configuration(message, response);
-		case FID_GET_IAQ_INDEX: return get_callback_value(message, response, &callback_value_iaq_index);
-		case FID_SET_IAQ_INDEX_CALLBACK_CONFIGURATION: return set_callback_value_callback_configuration(message, &callback_value_iaq_index);
-		case FID_GET_IAQ_INDEX_CALLBACK_CONFIGURATION: return get_callback_value_callback_configuration(message, response, &callback_value_iaq_index);
-		case FID_GET_TEMPERATURE: return get_callback_value(message, response, &callback_value_temperature);
-		case FID_SET_TEMPERATURE_CALLBACK_CONFIGURATION: return set_callback_value_callback_configuration(message, &callback_value_temperature);
-		case FID_GET_TEMPERATURE_CALLBACK_CONFIGURATION: return get_callback_value_callback_configuration(message, response, &callback_value_temperature);
-		case FID_GET_HUMIDITY: return get_callback_value(message, response, &callback_value_humidity);
-		case FID_SET_HUMIDITY_CALLBACK_CONFIGURATION: return set_callback_value_callback_configuration(message, &callback_value_humidity);
-		case FID_GET_HUMIDITY_CALLBACK_CONFIGURATION: return get_callback_value_callback_configuration(message, response, &callback_value_humidity);
-		case FID_GET_AIR_PRESSURE: return get_callback_value(message, response, &callback_value_air_pressure);
-		case FID_SET_AIR_PRESSURE_CALLBACK_CONFIGURATION: return set_callback_value_callback_configuration(message, &callback_value_air_pressure);
-		case FID_GET_AIR_PRESSURE_CALLBACK_CONFIGURATION: return get_callback_value_callback_configuration(message, response, &callback_value_air_pressure);
+		case FID_GET_IAQ_INDEX: return get_callback_value_int32_t(message, response, &callback_value_iaq_index);
+		case FID_SET_IAQ_INDEX_CALLBACK_CONFIGURATION: return set_callback_value_callback_configuration_int32_t(message, &callback_value_iaq_index);
+		case FID_GET_IAQ_INDEX_CALLBACK_CONFIGURATION: return get_callback_value_callback_configuration_int32_t(message, response, &callback_value_iaq_index);
+		case FID_GET_TEMPERATURE: return get_callback_value_int32_t(message, response, &callback_value_temperature);
+		case FID_SET_TEMPERATURE_CALLBACK_CONFIGURATION: return set_callback_value_callback_configuration_int32_t(message, &callback_value_temperature);
+		case FID_GET_TEMPERATURE_CALLBACK_CONFIGURATION: return get_callback_value_callback_configuration_int32_t(message, response, &callback_value_temperature);
+		case FID_GET_HUMIDITY: return get_callback_value_int32_t(message, response, &callback_value_humidity);
+		case FID_SET_HUMIDITY_CALLBACK_CONFIGURATION: return set_callback_value_callback_configuration_int32_t(message, &callback_value_humidity);
+		case FID_GET_HUMIDITY_CALLBACK_CONFIGURATION: return get_callback_value_callback_configuration_int32_t(message, response, &callback_value_humidity);
+		case FID_GET_AIR_PRESSURE: return get_callback_value_int32_t(message, response, &callback_value_air_pressure);
+		case FID_SET_AIR_PRESSURE_CALLBACK_CONFIGURATION: return set_callback_value_callback_configuration_int32_t(message, &callback_value_air_pressure);
+		case FID_GET_AIR_PRESSURE_CALLBACK_CONFIGURATION: return get_callback_value_callback_configuration_int32_t(message, response, &callback_value_air_pressure);
 		default: return HANDLE_MESSAGE_RESPONSE_NOT_SUPPORTED;
 	}
 }
-
 
 BootloaderHandleMessageResponse get_all_values(const GetAllValues *data, GetAllValues_Response *response) {
 	response->header.length      = sizeof(GetAllValues_Response);
@@ -94,8 +93,6 @@ BootloaderHandleMessageResponse get_all_values_callback_configuration(const GetA
 
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
-
-
 
 bool handle_all_values_callback(void) {
 	static bool is_buffered = false;
@@ -145,19 +142,19 @@ bool handle_all_values_callback(void) {
 }
 
 bool handle_iaq_index_callback(void) {
-	return handle_callback_value_callback(&callback_value_iaq_index, FID_CALLBACK_IAQ_INDEX);
+	return handle_callback_value_callback_int32_t(&callback_value_iaq_index, FID_CALLBACK_IAQ_INDEX);
 }
 
 bool handle_temperature_callback(void) {
-	return handle_callback_value_callback(&callback_value_temperature, FID_CALLBACK_TEMPERATURE);
+	return handle_callback_value_callback_int32_t(&callback_value_temperature, FID_CALLBACK_TEMPERATURE);
 }
 
 bool handle_humidity_callback(void) {
-	return handle_callback_value_callback(&callback_value_humidity, FID_CALLBACK_HUMIDITY);
+	return handle_callback_value_callback_int32_t(&callback_value_humidity, FID_CALLBACK_HUMIDITY);
 }
 
 bool handle_air_pressure_callback(void) {
-	return handle_callback_value_callback(&callback_value_air_pressure, FID_CALLBACK_AIR_PRESSURE);
+	return handle_callback_value_callback_int32_t(&callback_value_air_pressure, FID_CALLBACK_AIR_PRESSURE);
 }
 
 void communication_tick(void) {
@@ -165,10 +162,10 @@ void communication_tick(void) {
 }
 
 void communication_init(void) {
-	callback_value_init(&callback_value_humidity, voc_get_humidity);
-	callback_value_init(&callback_value_temperature, voc_get_temperature);
-	callback_value_init(&callback_value_air_pressure, voc_get_air_pressure);
-	callback_value_init(&callback_value_iaq_index, voc_get_iaq_index);
+	callback_value_init_int32_t(&callback_value_humidity, voc_get_humidity);
+	callback_value_init_int32_t(&callback_value_temperature, voc_get_temperature);
+	callback_value_init_int32_t(&callback_value_air_pressure, voc_get_air_pressure);
+	callback_value_init_int32_t(&callback_value_iaq_index, voc_get_iaq_index);
 
 	communication_callback_init();
 }
