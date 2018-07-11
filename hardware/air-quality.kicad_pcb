@@ -3,7 +3,7 @@
   (general
     (links 50)
     (no_connects 0)
-    (area 134.909499 128.309499 155.290501 153.690501)
+    (area 134.244999 127.644999 275.56786 157.715)
     (thickness 1.6)
     (drawings 12)
     (tracks 221)
@@ -24,7 +24,7 @@
 
   (layers
     (0 F.Cu signal)
-    (31 B.Cu signal hide)
+    (31 B.Cu signal)
     (32 B.Adhes user)
     (33 F.Adhes user)
     (34 B.Paste user)
@@ -46,7 +46,7 @@
   )
 
   (setup
-    (last_trace_width 0.55)
+    (last_trace_width 0.2)
     (user_trace_width 0.25)
     (user_trace_width 0.3)
     (user_trace_width 0.4)
@@ -76,8 +76,8 @@
     (pad_size 0.8001 0.8001)
     (pad_drill 0.6)
     (pad_to_mask_clearance 0)
-    (aux_axis_origin 135.1 128.5)
-    (grid_origin 135.1 128.5)
+    (aux_axis_origin 176.9 165.9)
+    (grid_origin 176.9 165.9)
     (visible_elements FFFFFF7F)
     (pcbplotparams
       (layerselection 0x00010_00000000)
