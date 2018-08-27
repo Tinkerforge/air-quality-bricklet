@@ -1,0 +1,37 @@
+Needs["NETLink`"]
+LoadNETAssembly["Tinkerforge",NotebookDirectory[]<>"../../.."]
+
+host="localhost"
+port=4223
+uid="XYZ"(*Change XYZ to the UID of your Air Quality Bricklet*)
+
+(*Create IPConnection and device object*)
+ipcon=NETNew["Tinkerforge.IPConnection"]
+aq=NETNew["Tinkerforge.BrickletAirQuality",uid,ipcon]
+ipcon@Connect[host,port]
+
+(*Callback function for all values callback*)
+AllValuesCB[sender_,iaqIndex_,iaqIndexAccuracy_,temperature_,humidity_,airPressure_]:=
+ Module[{},
+  Print["IAQ Index: "<>ToString[iaqIndex]];
+  If[iaqIndexAccuracy==Tinkerforge`BrickletAirQuality`ACCURACYUUNRELIABLE,Print["IAQ Index Accuracy: Unreliable"]];
+  If[iaqIndexAccuracy==Tinkerforge`BrickletAirQuality`ACCURACYULOW,Print["IAQ Index Accuracy: Low"]];
+  If[iaqIndexAccuracy==Tinkerforge`BrickletAirQuality`ACCURACYUMEDIUM,Print["IAQ Index Accuracy: Medium"]];
+  If[iaqIndexAccuracy==Tinkerforge`BrickletAirQuality`ACCURACYUHIGH,Print["IAQ Index Accuracy: High"]];
+  Print["Temperature: "<>ToString[N[Quantity[temperature,"°C/100"]]]];
+  Print["Humidity: "<>ToString[N[Quantity[humidity,"%RH/100"]]]];
+  Print["Air Pressure: "<>ToString[N[Quantity[airPressure,"mbar/100"]]]]
+ ]
+
+AddEventHandler[aq@AllValuesCallback,AllValuesCB]
+
+(*Set period for all values callback to 1s (1000ms) without a threshold*)
+option=Tinkerforge`BrickletAirQuality`THRESHOLDUOPTIONUOFF
+aq@SetAllValuesCallbackConfiguration[1000,False,option,0,0]
+
+Input["Click OK to exit"]
+
+(*Clean up*)
+ipcon@Disconnect[]
+ReleaseNETObject[aq]
+ReleaseNETObject[ipcon]

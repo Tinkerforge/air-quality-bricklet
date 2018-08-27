@@ -1,0 +1,42 @@
+Notebook[{
+ Cell[
+  BoxData[{
+   RowBox[{"Needs", "[", "\"\<NETLink`\>\"", "]"}],
+   RowBox[{"LoadNETAssembly", "[", RowBox[{"\"\<Tinkerforge\>\"", ",", RowBox[{RowBox[{"NotebookDirectory", "[", "]"}], "<>", "\"\<../../..\>\""}]}], "]"}]
+  }], "Input"
+ ],
+ Cell[
+  BoxData[{
+   RowBox[{"host", "=", "\"\<localhost\>\""}],
+   RowBox[{"port", "=", "4223"}],
+   RowBox[{"uid", "=", "\"\<XYZ\>\"", RowBox[{"(*", "Change XYZ to the UID of your Air Quality Bricklet", "*)"}]}],
+   RowBox[{"
+"}],
+   RowBox[{"(*", "Create IPConnection and device object", "*)"}],
+   RowBox[{"ipcon", "=", RowBox[{"NETNew", "[", "\"\<Tinkerforge.IPConnection\>\"", "]"}]}],
+   RowBox[{"aq", "=", RowBox[{"NETNew", "[", RowBox[{"\"\<Tinkerforge.BrickletAirQuality\>\"", ",", "uid", ",", "ipcon"}], "]"}]}],
+   RowBox[{"ipcon", "@", RowBox[{"Connect", "[", RowBox[{"host", ",", "port"}], "]"}]}],
+   RowBox[{"
+"}],
+   RowBox[{"(*", "Callback function for all values callback", "*)"}],
+   RowBox[{RowBox[{"AllValuesCB", "[", RowBox[{"sender_", ",", "iaqIndex_", ",", "iaqIndexAccuracy_", ",", "temperature_", ",", "humidity_", ",", "airPressure_"}], "]"}], ":=", "\[IndentingNewLine]", RowBox[{"Module", "[", RowBox[{RowBox[{"{", "}"}], ",", RowBox[{"\[IndentingNewLine]", RowBox[{"Print", "[", RowBox[{"\"\<IAQ Index: \>\"", "<>", RowBox[{"ToString", "[", "iaqIndex", "]"}]}], "]"}], ";", "\[IndentingNewLine]", RowBox[{"If", "[", RowBox[{RowBox[{"iaqIndexAccuracy", "==", "Tinkerforge`BrickletAirQuality`ACCURACYUUNRELIABLE"}], ",", RowBox[{"Print", "[", "\"\<IAQ Index Accuracy: Unreliable\>\"", "]"}]}], "]"}], ";", "\[IndentingNewLine]", RowBox[{"If", "[", RowBox[{RowBox[{"iaqIndexAccuracy", "==", "Tinkerforge`BrickletAirQuality`ACCURACYULOW"}], ",", RowBox[{"Print", "[", "\"\<IAQ Index Accuracy: Low\>\"", "]"}]}], "]"}], ";", "\[IndentingNewLine]", RowBox[{"If", "[", RowBox[{RowBox[{"iaqIndexAccuracy", "==", "Tinkerforge`BrickletAirQuality`ACCURACYUMEDIUM"}], ",", RowBox[{"Print", "[", "\"\<IAQ Index Accuracy: Medium\>\"", "]"}]}], "]"}], ";", "\[IndentingNewLine]", RowBox[{"If", "[", RowBox[{RowBox[{"iaqIndexAccuracy", "==", "Tinkerforge`BrickletAirQuality`ACCURACYUHIGH"}], ",", RowBox[{"Print", "[", "\"\<IAQ Index Accuracy: High\>\"", "]"}]}], "]"}], ";", "\[IndentingNewLine]", RowBox[{"Print", "[", RowBox[{"\"\<Temperature: \>\"", "<>", RowBox[{"ToString", "[", RowBox[{"N", "[", RowBox[{"Quantity", "[", RowBox[{"temperature", ",", "\"\<\.b0C/100\>\""}], "]"}], "]"}], "]"}]}], "]"}], ";", "\[IndentingNewLine]", RowBox[{"Print", "[", RowBox[{"\"\<Humidity: \>\"", "<>", RowBox[{"ToString", "[", RowBox[{"N", "[", RowBox[{"Quantity", "[", RowBox[{"humidity", ",", "\"\<%RH/100\>\""}], "]"}], "]"}], "]"}]}], "]"}], ";", "\[IndentingNewLine]", RowBox[{"Print", "[", RowBox[{"\"\<Air Pressure: \>\"", "<>", RowBox[{"ToString", "[", RowBox[{"N", "[", RowBox[{"Quantity", "[", RowBox[{"airPressure", ",", "\"\<mbar/100\>\""}], "]"}], "]"}], "]"}]}], "]"}], "\[IndentingNewLine]"}]}], "]"}]}],
+   RowBox[{"
+"}],
+   RowBox[{"AddEventHandler", "[", RowBox[{RowBox[{"aq", "@", "AllValuesCallback"}], ",", "AllValuesCB"}], "]"}],
+   RowBox[{"
+"}],
+   RowBox[{"(*", "Set period for all values callback to 1s (1000ms) without a threshold", "*)"}],
+   RowBox[{"option", "=", "Tinkerforge`BrickletAirQuality`THRESHOLDUOPTIONUOFF"}],
+   RowBox[{"aq", "@", RowBox[{"SetAllValuesCallbackConfiguration", "[", RowBox[{"1000", ",", "False", ",", "option", ",", "0", ",", "0"}], "]"}]}],
+   RowBox[{"
+"}],
+   RowBox[{"Input", "[", "\"\<Click OK to exit\>\"", "]"}],
+   RowBox[{"
+"}],
+   RowBox[{"(*", "Clean up", "*)"}],
+   RowBox[{"ipcon", "@", RowBox[{"Disconnect", "[", "]"}]}],
+   RowBox[{"ReleaseNETObject", "[", "aq", "]"}],
+   RowBox[{"ReleaseNETObject", "[", "ipcon", "]"}]
+  }], "Input"
+ ]
+}]
