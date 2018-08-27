@@ -133,12 +133,44 @@ typedef struct {
 
 typedef struct {
 	TFPMessageHeader header;
+} __attribute__((__packed__)) GetIAQIndex;
+
+typedef struct {
+	TFPMessageHeader header;
+	int32_t iaq_index;
+	uint8_t iaq_index_accuracy;
+} __attribute__((__packed__)) GetIAQIndex_Response;
+
+typedef struct {
+	TFPMessageHeader header;
+	uint32_t period;
+	bool value_has_to_change;
+} __attribute__((__packed__)) SetIAQIndexCallbackConfiguration;
+
+typedef struct {
+	TFPMessageHeader header;
+} __attribute__((__packed__)) GetIAQIndexCallbackConfiguration;
+
+typedef struct {
+	TFPMessageHeader header;
+	uint32_t period;
+	bool value_has_to_change;
+} __attribute__((__packed__)) GetIAQIndexCallbackConfiguration_Response;
+
+typedef struct {
+	TFPMessageHeader header;
 	int32_t iaq_index;
 	uint8_t iaq_index_accuracy;
 	int32_t temperature;
 	int32_t humidity;
 	int32_t air_pressure;
 } __attribute__((__packed__)) AllValues_Callback;
+
+typedef struct {
+	TFPMessageHeader header;
+	int32_t iaq_index;
+	uint8_t iaq_index_accuracy;
+} __attribute__((__packed__)) IAQIndex_Callback;
 
 
 // Function prototypes
@@ -147,6 +179,9 @@ BootloaderHandleMessageResponse set_temperature_offset(const SetTemperatureOffse
 BootloaderHandleMessageResponse get_temperature_offset(const GetTemperatureOffset *data, GetTemperatureOffset_Response *response);
 BootloaderHandleMessageResponse set_all_values_callback_configuration(const SetAllValuesCallbackConfiguration *data);
 BootloaderHandleMessageResponse get_all_values_callback_configuration(const GetAllValuesCallbackConfiguration *data, GetAllValuesCallbackConfiguration_Response *response);
+BootloaderHandleMessageResponse get_iaq_index(const GetIAQIndex *data, GetIAQIndex_Response *response);
+BootloaderHandleMessageResponse set_iaq_index_callback_configuration(const SetIAQIndexCallbackConfiguration *data);
+BootloaderHandleMessageResponse get_iaq_index_callback_configuration(const GetIAQIndexCallbackConfiguration *data, GetIAQIndexCallbackConfiguration_Response *response);
 
 // Callbacks
 bool handle_all_values_callback(void);

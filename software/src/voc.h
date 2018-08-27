@@ -66,8 +66,11 @@ typedef struct {
     uint8_t run_in_status;
     uint8_t stabilization_status;
 
-    bool callback_value_has_to_change;
-    uint32_t callback_period;
+	bool all_values_callback_value_has_to_change;
+	uint32_t all_values_callback_period;
+
+	bool iaq_index_callback_value_has_to_change;
+	uint32_t iaq_index_callback_period;
 
 	int32_t temperature_offset;
 } VOC;

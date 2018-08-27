@@ -32,7 +32,6 @@
 CallbackValue_int32_t callback_value_humidity;
 CallbackValue_int32_t callback_value_temperature;
 CallbackValue_int32_t callback_value_air_pressure;
-CallbackValue_int32_t callback_value_iaq_index;
 
 BootloaderHandleMessageResponse handle_message(const void *message, void *response) {
 	switch(tfp_get_fid_from_message(message)) {
@@ -41,9 +40,9 @@ BootloaderHandleMessageResponse handle_message(const void *message, void *respon
 		case FID_GET_TEMPERATURE_OFFSET: return get_temperature_offset(message, response);
 		case FID_SET_ALL_VALUES_CALLBACK_CONFIGURATION: return set_all_values_callback_configuration(message);
 		case FID_GET_ALL_VALUES_CALLBACK_CONFIGURATION: return get_all_values_callback_configuration(message, response);
-		case FID_GET_IAQ_INDEX: return get_callback_value_int32_t(message, response, &callback_value_iaq_index);
-		case FID_SET_IAQ_INDEX_CALLBACK_CONFIGURATION: return set_callback_value_callback_configuration_int32_t(message, &callback_value_iaq_index);
-		case FID_GET_IAQ_INDEX_CALLBACK_CONFIGURATION: return get_callback_value_callback_configuration_int32_t(message, response, &callback_value_iaq_index);
+		case FID_GET_IAQ_INDEX: return get_iaq_index(message, response);
+		case FID_SET_IAQ_INDEX_CALLBACK_CONFIGURATION: return set_iaq_index_callback_configuration(message);
+		case FID_GET_IAQ_INDEX_CALLBACK_CONFIGURATION: return get_iaq_index_callback_configuration(message, response);
 		case FID_GET_TEMPERATURE: return get_callback_value_int32_t(message, response, &callback_value_temperature);
 		case FID_SET_TEMPERATURE_CALLBACK_CONFIGURATION: return set_callback_value_callback_configuration_int32_t(message, &callback_value_temperature);
 		case FID_GET_TEMPERATURE_CALLBACK_CONFIGURATION: return get_callback_value_callback_configuration_int32_t(message, response, &callback_value_temperature);
@@ -81,15 +80,37 @@ BootloaderHandleMessageResponse get_temperature_offset(const GetTemperatureOffse
 }
 
 BootloaderHandleMessageResponse set_all_values_callback_configuration(const SetAllValuesCallbackConfiguration *data) {
-	voc.callback_value_has_to_change = data->value_has_to_change;
-	voc.callback_period              = data->period;
+	voc.all_values_callback_value_has_to_change = data->value_has_to_change;
+	voc.all_values_callback_period              = data->period;
 	return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
 
 BootloaderHandleMessageResponse get_all_values_callback_configuration(const GetAllValuesCallbackConfiguration *data, GetAllValuesCallbackConfiguration_Response *response) {
 	response->header.length       = sizeof(GetAllValuesCallbackConfiguration_Response);
-	response->value_has_to_change = voc.callback_value_has_to_change;
-	response->period              = voc.callback_period;
+	response->value_has_to_change = voc.all_values_callback_value_has_to_change;
+	response->period              = voc.all_values_callback_period;
+
+	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
+}
+
+BootloaderHandleMessageResponse get_iaq_index(const GetIAQIndex *data, GetIAQIndex_Response *response) {
+	response->header.length      = sizeof(GetAllValues_Response);
+	response->iaq_index          = voc_get_iaq_index();
+	response->iaq_index_accuracy = voc_get_iaq_index_accuracy();
+
+	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
+}
+
+BootloaderHandleMessageResponse set_iaq_index_callback_configuration(const SetIAQIndexCallbackConfiguration *data) {
+	voc.iaq_index_callback_value_has_to_change = data->value_has_to_change;
+	voc.iaq_index_callback_period              = data->period;
+	return HANDLE_MESSAGE_RESPONSE_EMPTY;
+}
+
+BootloaderHandleMessageResponse get_iaq_index_callback_configuration(const GetIAQIndexCallbackConfiguration *data, GetIAQIndexCallbackConfiguration_Response *response) {
+	response->header.length       = sizeof(GetIAQIndexCallbackConfiguration_Response);
+	response->value_has_to_change = voc.iaq_index_callback_value_has_to_change;
+	response->period              = voc.iaq_index_callback_period;
 
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
@@ -105,8 +126,8 @@ bool handle_all_values_callback(void) {
 	static uint32_t last_time = 0;
 
 	if(!is_buffered) {
-		if(voc.callback_period == 0 ||
-		    !system_timer_is_time_elapsed_ms(last_time, voc.callback_period)) {
+		if(voc.all_values_callback_period == 0 ||
+		    !system_timer_is_time_elapsed_ms(last_time, voc.all_values_callback_period)) {
 			return false;
 		}
 
@@ -117,7 +138,7 @@ bool handle_all_values_callback(void) {
 		cb.iaq_index_accuracy = voc_get_iaq_index_accuracy();
 		cb.temperature        = voc_get_temperature();
 
-		if(voc.callback_value_has_to_change && last_iaq_index == cb.iaq_index && last_iaq_index_accuracy == cb.iaq_index_accuracy &&
+		if(voc.all_values_callback_value_has_to_change && last_iaq_index == cb.iaq_index && last_iaq_index_accuracy == cb.iaq_index_accuracy &&
 		   last_humidity == cb.humidity && last_air_pressure == cb.air_pressure && last_temperature == cb.temperature) {
 			return false;
 		}
@@ -142,7 +163,40 @@ bool handle_all_values_callback(void) {
 }
 
 bool handle_iaq_index_callback(void) {
-	return handle_callback_value_callback_int32_t(&callback_value_iaq_index, FID_CALLBACK_IAQ_INDEX);
+	static bool is_buffered = false;
+	static IAQIndex_Callback cb;
+	static int32_t last_iaq_index = 0;
+	static uint8_t last_iaq_index_accuracy = 0;
+	static uint32_t last_time = 0;
+
+	if(!is_buffered) {
+		if(voc.iaq_index_callback_period == 0 ||
+		    !system_timer_is_time_elapsed_ms(last_time, voc.iaq_index_callback_period)) {
+			return false;
+		}
+
+		tfp_make_default_header(&cb.header, bootloader_get_uid(), sizeof(IAQIndex_Callback), FID_CALLBACK_IAQ_INDEX);
+		cb.iaq_index          = voc_get_iaq_index();
+		cb.iaq_index_accuracy = voc_get_iaq_index_accuracy();
+
+		if(voc.iaq_index_callback_value_has_to_change && last_iaq_index == cb.iaq_index && last_iaq_index_accuracy == cb.iaq_index_accuracy) {
+			return false;
+		}
+
+		last_iaq_index          = cb.iaq_index;
+		last_iaq_index_accuracy = cb.iaq_index_accuracy;
+		last_time = system_timer_get_ms();
+	}
+
+	if(bootloader_spitfp_is_send_possible(&bootloader_status.st)) {
+		bootloader_spitfp_send_ack_and_message(&bootloader_status, (uint8_t*)&cb, sizeof(IAQIndex_Callback));
+		is_buffered = false;
+		return true;
+	} else {
+		is_buffered = true;
+	}
+
+	return false;
 }
 
 bool handle_temperature_callback(void) {
@@ -165,7 +219,6 @@ void communication_init(void) {
 	callback_value_init_int32_t(&callback_value_humidity, voc_get_humidity);
 	callback_value_init_int32_t(&callback_value_temperature, voc_get_temperature);
 	callback_value_init_int32_t(&callback_value_air_pressure, voc_get_air_pressure);
-	callback_value_init_int32_t(&callback_value_iaq_index, voc_get_iaq_index);
 
 	communication_callback_init();
 }
