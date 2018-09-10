@@ -25,9 +25,8 @@ Notebook[{
    RowBox[{"AddEventHandler", "[", RowBox[{RowBox[{"aq", "@", "AllValuesCallback"}], ",", "AllValuesCB"}], "]"}],
    RowBox[{"
 "}],
-   RowBox[{"(*", "Set period for all values callback to 1s (1000ms) without a threshold", "*)"}],
-   RowBox[{"option", "=", "Tinkerforge`BrickletAirQuality`THRESHOLDUOPTIONUOFF"}],
-   RowBox[{"aq", "@", RowBox[{"SetAllValuesCallbackConfiguration", "[", RowBox[{"1000", ",", "False", ",", "option", ",", "0", ",", "0"}], "]"}]}],
+   RowBox[{"(*", "Set period for all values callback to 1s (1000ms)", "*)"}],
+   RowBox[{"aq", "@", RowBox[{"SetAllValuesCallbackConfiguration", "[", RowBox[{"1000", ",", "False"}], "]"}]}],
    RowBox[{"
 "}],
    RowBox[{"Input", "[", "\"\<Click OK to exit\>\"", "]"}],

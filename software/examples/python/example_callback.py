@@ -36,8 +36,8 @@ if __name__ == "__main__":
     # Register all values callback to function cb_all_values
     aq.register_callback(aq.CALLBACK_ALL_VALUES, cb_all_values)
 
-    # Set period for all values callback to 1s (1000ms) without a threshold
-    aq.set_all_values_callback_configuration(1000, False, "x", 0, 0)
+    # Set period for all values callback to 1s (1000ms)
+    aq.set_all_values_callback_configuration(1000, False)
 
     raw_input("Press key to exit\n") # Use input() in Python 3
     ipcon.disconnect()

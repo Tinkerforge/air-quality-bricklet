@@ -41,8 +41,8 @@ $ipcon->connect(HOST, PORT); // Connect to brickd
 // Register all values callback to function cb_allValues
 $aq->registerCallback(BrickletAirQuality::CALLBACK_ALL_VALUES, 'cb_allValues');
 
-// Set period for all values callback to 1s (1000ms) without a threshold
-$aq->setAllValuesCallbackConfiguration(1000, FALSE, 'x', 0, 0);
+// Set period for all values callback to 1s (1000ms)
+$aq->setAllValuesCallbackConfiguration(1000, FALSE);
 
 echo "Press ctrl+c to exit\n";
 $ipcon->dispatchCallbacks(-1); // Dispatch callbacks forever

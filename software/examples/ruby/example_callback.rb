@@ -39,8 +39,8 @@ aq.register_callback(BrickletAirQuality::CALLBACK_ALL_VALUES) do |iaq_index,
   puts ''
 end
 
-# Set period for all values callback to 1s (1000ms) without a threshold
-aq.set_all_values_callback_configuration 1000, false, 'x', 0, 0
+# Set period for all values callback to 1s (1000ms)
+aq.set_all_values_callback_configuration 1000, false
 
 puts 'Press key to exit'
 $stdin.gets

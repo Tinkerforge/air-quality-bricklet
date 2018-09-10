@@ -48,8 +48,8 @@ class Example
 		// Register all values callback to function AllValuesCB
 		aq.AllValuesCallback += AllValuesCB;
 
-		// Set period for all values callback to 1s (1000ms) without a threshold
-		aq.SetAllValuesCallbackConfiguration(1000, false, 'x', 0, 0);
+		// Set period for all values callback to 1s (1000ms)
+		aq.SetAllValuesCallbackConfiguration(1000, false);
 
 		Console.WriteLine("Press enter to exit");
 		Console.ReadLine();

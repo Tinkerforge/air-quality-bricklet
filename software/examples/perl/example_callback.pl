@@ -47,8 +47,8 @@ $ipcon->connect(&HOST, &PORT); # Connect to brickd
 # Register all values callback to subroutine cb_all_values
 $aq->register_callback($aq->CALLBACK_ALL_VALUES, 'cb_all_values');
 
-# Set period for all values callback to 1s (1000ms) without a threshold
-$aq->set_all_values_callback_configuration(1000, 0, 'x', 0, 0);
+# Set period for all values callback to 1s (1000ms)
+$aq->set_all_values_callback_configuration(1000, 0);
 
 print "Press key to exit\n";
 <STDIN>;

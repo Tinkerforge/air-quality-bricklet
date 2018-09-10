@@ -16,8 +16,8 @@ ipcon.connect(HOST, PORT,
 
 ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
     function (connectReason) {
-        // Set period for all values callback to 1s (1000ms) without a threshold
-        aq.setAllValuesCallbackConfiguration(1000, false, 'x', 0, 0);
+        // Set period for all values callback to 1s (1000ms)
+        aq.setAllValuesCallbackConfiguration(1000, false);
     }
 );
 

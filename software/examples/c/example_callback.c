@@ -52,8 +52,8 @@ int main(void) {
 	                              (void *)cb_all_values,
 	                              NULL);
 
-	// Set period for all values callback to 1s (1000ms) without a threshold
-	air_quality_set_all_values_callback_configuration(&aq, 1000, false, 'x', 0, 0);
+	// Set period for all values callback to 1s (1000ms)
+	air_quality_set_all_values_callback_configuration(&aq, 1000, false);
 
 	printf("Press key to exit\n");
 	getchar();

@@ -40,8 +40,8 @@ public class ExampleCallback {
 			}
 		});
 
-		// Set period for all values callback to 1s (1000ms) without a threshold
-		aq.setAllValuesCallbackConfiguration(1000, false, 'x', 0, 0);
+		// Set period for all values callback to 1s (1000ms)
+		aq.setAllValuesCallbackConfiguration(1000, false);
 
 		System.out.println("Press key to exit"); System.in.read();
 		ipcon.disconnect();

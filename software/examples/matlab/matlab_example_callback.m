@@ -15,8 +15,8 @@ function matlab_example_callback()
     % Register all values callback to function cb_all_values
     set(aq, 'AllValuesCallback', @(h, e) cb_all_values(e));
 
-    % Set period for all values callback to 1s (1000ms) without a threshold
-    aq.setAllValuesCallbackConfiguration(1000, false, 'x', 0, 0);
+    % Set period for all values callback to 1s (1000ms)
+    aq.setAllValuesCallbackConfiguration(1000, false);
 
     input('Press key to exit\n', 's');
     ipcon.disconnect();

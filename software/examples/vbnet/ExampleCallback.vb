@@ -38,8 +38,8 @@ Module ExampleCallback
         ' Register all values callback to subroutine AllValuesCB
         AddHandler aq.AllValuesCallback, AddressOf AllValuesCB
 
-        ' Set period for all_values callback to 1s (1000ms) without a threshold
-        aq.SetAllValuesCallbackConfiguration(1000, False, "x"C, 0, 0)
+        ' Set period for all_values callback to 1s (1000ms)
+        aq.SetAllValuesCallbackConfiguration(1000, False)
 
         Console.WriteLine("Press key to exit")
         Console.ReadLine()
