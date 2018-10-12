@@ -176,13 +176,13 @@ void voc_task_bsec_read_data(int64_t time_stamp_trigger, bsec_input_t *inputs, u
                 // Add optional heatsource input which will be subtracted from the temperature reading to
                 // compensate for device-specific self-heating (supported in BSEC IAQ solution)
 
-                // In our tests we found that the XMC1400 adds about 3.9°C above ambient to the
+                // In our tests we found that the XMC1400 adds about 0.5°C above ambient to the
                 // temperature of the circuit board (tested in room temperature conditions).
 				//
 				// Additionally we add the user defined offset. This is useful if the Bricklet
 				// is mounted in an enclosure with additional heat sources (for example).
                 inputs[*num_bsec_inputs].sensor_id = BSEC_INPUT_HEATSOURCE;
-                inputs[*num_bsec_inputs].signal = 3.9 + voc.temperature_offset;
+                inputs[*num_bsec_inputs].signal = 0.5 + voc.temperature_offset;
                 inputs[*num_bsec_inputs].time_stamp = time_stamp_trigger;
                 (*num_bsec_inputs)++;
             }
@@ -368,23 +368,23 @@ void voc_tick_task_init(void) {
     // that it works with 1 sample per second, but breaks if we increase the rate.
     // Is it OK to put this to 1 SPS or should we decrease it to 0.33 SPS?
     requested_virtual_sensors[0].sensor_id = BSEC_OUTPUT_IAQ_ESTIMATE;
-    requested_virtual_sensors[0].sample_rate = 1; //BSEC_SAMPLE_RATE_LP;
+    requested_virtual_sensors[0].sample_rate = BSEC_SAMPLE_RATE_LP;
     requested_virtual_sensors[1].sensor_id = BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_TEMPERATURE;
-    requested_virtual_sensors[1].sample_rate = 1; //BSEC_SAMPLE_RATE_LP;
+    requested_virtual_sensors[1].sample_rate = BSEC_SAMPLE_RATE_LP;
     requested_virtual_sensors[2].sensor_id = BSEC_OUTPUT_RAW_PRESSURE;
-    requested_virtual_sensors[2].sample_rate = 1; //BSEC_SAMPLE_RATE_LP;
+    requested_virtual_sensors[2].sample_rate = BSEC_SAMPLE_RATE_LP;
     requested_virtual_sensors[3].sensor_id = BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_HUMIDITY;
-    requested_virtual_sensors[3].sample_rate = 1; //BSEC_SAMPLE_RATE_LP;
+    requested_virtual_sensors[3].sample_rate = BSEC_SAMPLE_RATE_LP;
     requested_virtual_sensors[4].sensor_id = BSEC_OUTPUT_RAW_GAS;
-    requested_virtual_sensors[4].sample_rate = 1; //BSEC_SAMPLE_RATE_LP;
+    requested_virtual_sensors[4].sample_rate = BSEC_SAMPLE_RATE_LP;
     requested_virtual_sensors[5].sensor_id = BSEC_OUTPUT_RAW_TEMPERATURE;
-    requested_virtual_sensors[5].sample_rate = 1; //BSEC_SAMPLE_RATE_LP;
+    requested_virtual_sensors[5].sample_rate = BSEC_SAMPLE_RATE_LP;
     requested_virtual_sensors[6].sensor_id = BSEC_OUTPUT_RAW_HUMIDITY;
-    requested_virtual_sensors[6].sample_rate = 1; //BSEC_SAMPLE_RATE_LP;
+    requested_virtual_sensors[6].sample_rate = BSEC_SAMPLE_RATE_LP;
     requested_virtual_sensors[7].sensor_id = BSEC_OUTPUT_STABILIZATION_STATUS;
-    requested_virtual_sensors[7].sample_rate = 1; //BSEC_SAMPLE_RATE_LP;
+    requested_virtual_sensors[7].sample_rate = BSEC_SAMPLE_RATE_LP;
     requested_virtual_sensors[8].sensor_id = BSEC_OUTPUT_RUN_IN_STATUS;
-    requested_virtual_sensors[8].sample_rate = 1; //BSEC_SAMPLE_RATE_LP;
+    requested_virtual_sensors[8].sample_rate = BSEC_SAMPLE_RATE_LP;
 
     bsec_update_subscription(requested_virtual_sensors, requested_virtual_sensors_num, required_sensor_settings, &required_sensor_settings_num);
 }
