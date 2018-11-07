@@ -1,20 +1,20 @@
 use std::{error::Error, io};
 
-use tinkerforge::{air_quality_bricklet::*, ipconnection::IpConnection};
+use tinkerforge::{air_quality_bricklet::*, ip_connection::IpConnection};
 
-const HOST: &str = "127.0.0.1";
+const HOST: &str = "localhost";
 const PORT: u16 = 4223;
-const UID: &str = "XYZ"; // Change XYZ to the UID of your Air Quality Bricklet
+const UID: &str = "XYZ"; // Change XYZ to the UID of your Air Quality Bricklet.
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let ipcon = IpConnection::new(); // Create IP connection
-    let air_quality_bricklet = AirQualityBricklet::new(UID, &ipcon); // Create device object
+    let ipcon = IpConnection::new(); // Create IP connection.
+    let aq = AirQualityBricklet::new(UID, &ipcon); // Create device object.
 
-    ipcon.connect(HOST, PORT).recv()??; // Connect to brickd
-                                        // Don't use device before ipcon is connected
+    ipcon.connect((HOST, PORT)).recv()??; // Connect to brickd.
+                                          // Don't use device before ipcon is connected.
 
-    // Get current all values
-    let get_all_values_result = air_quality_bricklet.get_all_values().recv()?;
+    // Get current all values.
+    let get_all_values_result = aq.get_all_values().recv()?;
 
     println!("IAQ Index: {}", get_all_values_result.iaq_index);
 
@@ -28,9 +28,9 @@ fn main() -> Result<(), Box<dyn Error>> {
         println!("IAQ Index Accuracy: High");
     }
 
-    println!("Temperature: {}{}", get_all_values_result.temperature as f32 / 100.0, " °C");
-    println!("Humidity: {}{}", get_all_values_result.humidity as f32 / 100.0, " %RH");
-    println!("Air Pressure: {}{}", get_all_values_result.air_pressure as f32 / 100.0, " mbar");
+    println!("Temperature: {} °C", get_all_values_result.temperature as f32 / 100.0);
+    println!("Humidity: {} %RH", get_all_values_result.humidity as f32 / 100.0);
+    println!("Air Pressure: {} mbar", get_all_values_result.air_pressure as f32 / 100.0);
 
     println!("Press enter to exit.");
     let mut _input = String::new();
