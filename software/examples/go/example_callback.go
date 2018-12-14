@@ -31,9 +31,9 @@ func main() {
 			fmt.Println("IAQ Index Accuracy: High")
 		}
 
-		fmt.Printf("Temperature: %d °C\n", float64(temperature)/100.0)
-		fmt.Printf("Humidity: %d %RH\n", float64(humidity)/100.0)
-		fmt.Printf("Air Pressure: %d mbar\n", float64(airPressure)/100.0)
+		fmt.Printf("Temperature: %f °C\n", float64(temperature)/100.0)
+		fmt.Printf("Humidity: %f %RH\n", float64(humidity)/100.0)
+		fmt.Printf("Air Pressure: %f mbar\n", float64(airPressure)/100.0)
 		fmt.Println()
 	})
 
