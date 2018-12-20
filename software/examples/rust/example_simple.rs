@@ -14,23 +14,23 @@ fn main() -> Result<(), Box<dyn Error>> {
                                           // Don't use device before ipcon is connected.
 
     // Get current all values.
-    let get_all_values_result = aq.get_all_values().recv()?;
+    let all_values = aq.get_all_values().recv()?;
 
-    println!("IAQ Index: {}", get_all_values_result.iaq_index);
+    println!("IAQ Index: {}", all_values.iaq_index);
 
-    if get_all_values_result.iaq_index_accuracy == AIR_QUALITY_BRICKLET_ACCURACY_UNRELIABLE {
+    if all_values.iaq_index_accuracy == AIR_QUALITY_BRICKLET_ACCURACY_UNRELIABLE {
         println!("IAQ Index Accuracy: Unreliable");
-    } else if get_all_values_result.iaq_index_accuracy == AIR_QUALITY_BRICKLET_ACCURACY_LOW {
+    } else if all_values.iaq_index_accuracy == AIR_QUALITY_BRICKLET_ACCURACY_LOW {
         println!("IAQ Index Accuracy: Low");
-    } else if get_all_values_result.iaq_index_accuracy == AIR_QUALITY_BRICKLET_ACCURACY_MEDIUM {
+    } else if all_values.iaq_index_accuracy == AIR_QUALITY_BRICKLET_ACCURACY_MEDIUM {
         println!("IAQ Index Accuracy: Medium");
-    } else if get_all_values_result.iaq_index_accuracy == AIR_QUALITY_BRICKLET_ACCURACY_HIGH {
+    } else if all_values.iaq_index_accuracy == AIR_QUALITY_BRICKLET_ACCURACY_HIGH {
         println!("IAQ Index Accuracy: High");
     }
 
-    println!("Temperature: {} °C", get_all_values_result.temperature as f32 / 100.0);
-    println!("Humidity: {} %RH", get_all_values_result.humidity as f32 / 100.0);
-    println!("Air Pressure: {} mbar", get_all_values_result.air_pressure as f32 / 100.0);
+    println!("Temperature: {} °C", all_values.temperature as f32 / 100.0);
+    println!("Humidity: {} %RH", all_values.humidity as f32 / 100.0);
+    println!("Air Pressure: {} mbar", all_values.air_pressure as f32 / 100.0);
 
     println!("Press enter to exit.");
     let mut _input = String::new();
