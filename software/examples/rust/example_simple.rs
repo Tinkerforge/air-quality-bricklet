@@ -30,7 +30,10 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     println!("Temperature: {} °C", all_values.temperature as f32 / 100.0);
     println!("Humidity: {} %RH", all_values.humidity as f32 / 100.0);
-    println!("Air Pressure: {} mbar", all_values.air_pressure as f32 / 100.0);
+    println!(
+        "Air Pressure: {} mbar",
+        all_values.air_pressure as f32 / 100.0
+    );
 
     println!("Press enter to exit.");
     let mut _input = String::new();
