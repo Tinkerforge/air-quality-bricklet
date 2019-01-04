@@ -3,3 +3,6 @@
 
 2019-01-04: 2.0.1 (88d92e70)
 - Fix error in packet length for get_iaq_index function
+
+2019-01-04: 2.0.2 (TBD)
+- Fix temperature offset (use 1/100 °C instead of °C)
