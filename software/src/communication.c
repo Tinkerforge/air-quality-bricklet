@@ -94,7 +94,7 @@ BootloaderHandleMessageResponse get_all_values_callback_configuration(const GetA
 }
 
 BootloaderHandleMessageResponse get_iaq_index(const GetIAQIndex *data, GetIAQIndex_Response *response) {
-	response->header.length      = sizeof(GetAllValues_Response);
+	response->header.length      = sizeof(GetIAQIndex_Response);
 	response->iaq_index          = voc_get_iaq_index();
 	response->iaq_index_accuracy = voc_get_iaq_index_accuracy();
 
