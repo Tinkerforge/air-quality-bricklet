@@ -32,6 +32,7 @@
 #include "bricklib2/os/coop_task.h"
 #include "bricklib2/logging/logging.h"
 #include "bricklib2/bootloader/bootloader.h"
+#include "bricklib2/utility/util_definitions.h"
 
 #include "configs/config_bme680.h"
 
@@ -39,7 +40,7 @@
 #include "bsec_datatypes.h"
 
 // Config for 3.3V, 3 seconds, 4 days
-const uint8_t voc_config_iaq_33v_3s_4d[BSEC_MAX_PROPERTY_BLOB_SIZE] = {1,5,4,1,61,0,0,0,0,0,0,0,120,1,0,0,105,0,1,0,3,205,204,76,62,0,0,0,0,0,0,0,0,0,0,0,0,113,61,138,63,0,0,0,0,0,0,0,0,0,0,0,0,137,65,0,63,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,225,68,0,192,168,71,40,0,2,0,0,0,0,0,0,0,250,67,0,0,97,67,0,0,200,65,0,0,200,65,173,250,228,64,41,28,93,67,0,0,112,65,0,0,0,63,9,0,5,0,0,0,0,0,1,51,0,9,0,10,215,163,59,205,204,204,61,225,122,148,62,41,92,15,61,0,0,0,63,0,0,0,63,154,153,89,63,154,153,25,62,1,1,0,0,128,63,6,236,81,184,61,51,51,131,64,40,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,131,0,254,0,2,1,5,48,117,100,0,44,1,151,7,132,3,197,0,144,1,64,1,64,1,48,117,48,117,48,117,48,117,100,0,100,0,100,0,48,117,48,117,48,117,100,0,100,0,48,117,100,0,100,0,100,0,100,0,48,117,48,117,48,117,100,0,100,0,100,0,48,117,48,117,100,0,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,44,1,0,0,0,0,178,202,0,0};
+const uint8_t voc_config_iaq_33v_3s_4d[BSEC_MAX_PROPERTY_BLOB_SIZE] = {1,7,4,1,61,0,0,0,0,0,0,0,174,1,0,0,48,0,1,0,137,65,0,63,205,204,204,62,0,0,64,63,205,204,204,62,0,0,225,68,0,192,168,71,64,49,119,76,0,0,0,0,0,80,5,95,0,0,0,0,0,0,0,0,28,0,2,0,0,244,1,225,0,25,0,0,128,64,0,0,32,65,144,1,0,0,112,65,0,0,0,63,16,0,3,0,10,215,163,60,10,215,35,59,10,215,35,59,9,0,5,0,0,0,0,0,1,88,0,9,0,229,208,34,62,0,0,0,0,0,0,0,0,218,27,156,62,225,11,67,64,0,0,160,64,0,0,0,0,0,0,0,0,94,75,72,189,93,254,159,64,66,62,160,191,0,0,0,0,0,0,0,0,33,31,180,190,138,176,97,64,65,241,99,190,0,0,0,0,0,0,0,0,167,121,71,61,165,189,41,192,184,30,189,64,12,0,10,0,0,0,0,0,0,0,0,0,229,0,254,0,2,1,5,48,117,100,0,44,1,112,23,151,7,132,3,197,0,92,4,144,1,64,1,64,1,144,1,48,117,48,117,48,117,48,117,100,0,100,0,100,0,48,117,48,117,48,117,100,0,100,0,48,117,48,117,100,0,100,0,100,0,100,0,48,117,48,117,48,117,100,0,100,0,100,0,48,117,48,117,100,0,100,0,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,8,7,8,7,8,7,8,7,8,7,8,7,8,7,8,7,8,7,8,7,8,7,8,7,8,7,8,7,112,23,112,23,112,23,112,23,112,23,112,23,112,23,112,23,112,23,112,23,112,23,112,23,112,23,112,23,255,255,255,255,255,255,255,255,220,5,220,5,220,5,255,255,255,255,255,255,220,5,220,5,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,44,1,0,0,0,0,239,79,0,0};
 
 VOC voc;
 CoopTask voc_task;
@@ -148,12 +149,25 @@ void voc_task_bsec_trigger_measurement(bsec_bme_settings_t *sensor_settings) {
     }
 }
 
-void voc_task_bsec_read_data(int64_t time_stamp_trigger, bsec_input_t *inputs, uint8_t *num_bsec_inputs, int32_t bsec_process_data) {
+int8_t voc_task_bsec_read_data(int64_t time_stamp_trigger, bsec_input_t *inputs, uint8_t *num_bsec_inputs, int32_t bsec_process_data) {
     static struct bme680_field_data data;
+	static float last_temperature = -10000;
 
     // We only have to read data if the previous call the bsec_sensor_control() asked for it
     if(bsec_process_data) {
-        bme680_get_sensor_data(&data, &voc.bme680);
+		int8_t result = bme680_get_sensor_data(&data, &voc.bme680);
+		if(result != BME680_OK) {
+        	logd("Unexpected bme680_get_sensor_data result: %d\n\r", result);
+			return result;
+		}
+
+		// Disallow unrealistic temperature changes
+		if(last_temperature != -10000) {
+			if(ABS(last_temperature - data.temperature) > 7.5) {
+				return -1;
+			}
+		}
+		last_temperature = data.temperature;
 
         if(data.status & BME680_NEW_DATA_MSK) {
             // Pressure to be processed by BSEC
@@ -169,7 +183,7 @@ void voc_task_bsec_read_data(int64_t time_stamp_trigger, bsec_input_t *inputs, u
             if(bsec_process_data & BSEC_PROCESS_TEMPERATURE) {
                 // Place temperature sample into input struct
                 inputs[*num_bsec_inputs].sensor_id = BSEC_INPUT_TEMPERATURE;
-                inputs[*num_bsec_inputs].signal = data.temperature / 100.0f;
+                inputs[*num_bsec_inputs].signal = data.temperature;
                 inputs[*num_bsec_inputs].time_stamp = time_stamp_trigger;
                 (*num_bsec_inputs)++;
 
@@ -191,7 +205,7 @@ void voc_task_bsec_read_data(int64_t time_stamp_trigger, bsec_input_t *inputs, u
             if(bsec_process_data & BSEC_PROCESS_HUMIDITY) {
                 // Place humidity sample into input struct
                 inputs[*num_bsec_inputs].sensor_id = BSEC_INPUT_HUMIDITY;
-                inputs[*num_bsec_inputs].signal = data.humidity / 1000.0f;
+                inputs[*num_bsec_inputs].signal = data.humidity;
                 inputs[*num_bsec_inputs].time_stamp = time_stamp_trigger;
                 (*num_bsec_inputs)++;
             }
@@ -209,9 +223,11 @@ void voc_task_bsec_read_data(int64_t time_stamp_trigger, bsec_input_t *inputs, u
             }
         }
     }
+
+	return BME680_OK;
 }
 
-void voc_task_bsec_process_data(bsec_input_t *bsec_inputs, uint8_t num_bsec_inputs) {
+bsec_library_return_t voc_task_bsec_process_data(bsec_input_t *bsec_inputs, uint8_t num_bsec_inputs) {
     // Output buffer set to the maximum virtual sensor outputs supported
     bsec_output_t bsec_outputs[BSEC_NUMBER_OUTPUTS];
     uint8_t num_bsec_outputs = 0;
@@ -231,12 +247,13 @@ void voc_task_bsec_process_data(bsec_input_t *bsec_inputs, uint8_t num_bsec_inpu
         bsec_library_return_t status = bsec_do_steps(bsec_inputs, num_bsec_inputs, bsec_outputs, &num_bsec_outputs);
         if(status != BSEC_OK) {
         	logd("Unexpected bsec_do_steps status: %d\n\r", status);
+			return status;
         }
 
         // Iterate through the outputs and extract the relevant ones.
         for(index = 0; index < num_bsec_outputs; index++) {
             switch(bsec_outputs[index].sensor_id) {
-                case BSEC_OUTPUT_IAQ_ESTIMATE:
+                case BSEC_OUTPUT_IAQ:
                     voc.iaq_index = (int32_t)bsec_outputs[index].signal;
                     voc.iaq_accuracy = bsec_outputs[index].accuracy;
                     break;
@@ -269,6 +286,8 @@ void voc_task_bsec_process_data(bsec_input_t *bsec_inputs, uint8_t num_bsec_inpu
             }
         }
     }
+
+	return BSEC_OK;
 }
 
 uint16_t voc_state_load(uint8_t *data) {
@@ -373,7 +392,7 @@ void voc_tick_task_init(void) {
     // which corresponds to one sample for each 3 seconds. Per trial and error we found
     // that it works with 1 sample per second, but breaks if we increase the rate.
     // Is it OK to put this to 1 SPS or should we decrease it to 0.33 SPS?
-    requested_virtual_sensors[0].sensor_id = BSEC_OUTPUT_IAQ_ESTIMATE;
+    requested_virtual_sensors[0].sensor_id = BSEC_OUTPUT_IAQ;
     requested_virtual_sensors[0].sample_rate = BSEC_SAMPLE_RATE_LP;
     requested_virtual_sensors[1].sensor_id = BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_TEMPERATURE;
     requested_virtual_sensors[1].sample_rate = BSEC_SAMPLE_RATE_LP;
@@ -418,10 +437,14 @@ void voc_tick_task(void) {
 
 		// Read data from measurement
 		uint8_t num_bsec_inputs = 0;
-		voc_task_bsec_read_data(timestamp, bsec_inputs, &num_bsec_inputs, settings.process_data);
+		if(voc_task_bsec_read_data(timestamp, bsec_inputs, &num_bsec_inputs, settings.process_data) != BME680_OK) {
+			continue;
+		}
 
         // Give data to BSEC for processing
-		voc_task_bsec_process_data(bsec_inputs, num_bsec_inputs);
+		if(voc_task_bsec_process_data(bsec_inputs, num_bsec_inputs) != BSEC_OK) {
+			continue;
+		}
         
 		// Update saved state if 12 hours are elapsed since last save
 		// At 50000 page erase cycles (see XMC1400 datasheet page 10.1.1) and 2 pages written per state save

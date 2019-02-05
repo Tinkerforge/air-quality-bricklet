@@ -58,10 +58,10 @@ typedef struct {
 
     uint8_t iaq_accuracy;
 
-    int32_t raw_temperature;
-    int32_t raw_air_pressure;
-    int32_t raw_humidity;
-    int32_t raw_gas;
+    float raw_temperature;
+    float raw_air_pressure;
+    float raw_humidity;
+    float raw_gas;
 
     uint8_t run_in_status;
     uint8_t stabilization_status;
