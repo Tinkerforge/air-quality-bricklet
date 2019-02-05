@@ -1,5 +1,5 @@
 /* air-quality-bricklet
- * Copyright (C) 2018 Olaf Lüke <olaf@tinkerforge.com>
+ * Copyright (C) 2019 Olaf Lüke <olaf@tinkerforge.com>
  *
  * communication.h: TFP protocol message handling
  *
@@ -34,34 +34,34 @@ void communication_tick(void);
 void communication_init(void);
 
 // Constants
-#define VOC_ACCURACY_UNRELIABLE 0
-#define VOC_ACCURACY_LOW 1
-#define VOC_ACCURACY_MEDIUM 2
-#define VOC_ACCURACY_HIGH 3
+#define AIR_QUALITY_ACCURACY_UNRELIABLE 0
+#define AIR_QUALITY_ACCURACY_LOW 1
+#define AIR_QUALITY_ACCURACY_MEDIUM 2
+#define AIR_QUALITY_ACCURACY_HIGH 3
 
-#define VOC_THRESHOLD_OPTION_OFF 'x'
-#define VOC_THRESHOLD_OPTION_OUTSIDE 'o'
-#define VOC_THRESHOLD_OPTION_INSIDE 'i'
-#define VOC_THRESHOLD_OPTION_SMALLER '<'
-#define VOC_THRESHOLD_OPTION_GREATER '>'
+#define AIR_QUALITY_THRESHOLD_OPTION_OFF 'x'
+#define AIR_QUALITY_THRESHOLD_OPTION_OUTSIDE 'o'
+#define AIR_QUALITY_THRESHOLD_OPTION_INSIDE 'i'
+#define AIR_QUALITY_THRESHOLD_OPTION_SMALLER '<'
+#define AIR_QUALITY_THRESHOLD_OPTION_GREATER '>'
 
-#define VOC_BOOTLOADER_MODE_BOOTLOADER 0
-#define VOC_BOOTLOADER_MODE_FIRMWARE 1
-#define VOC_BOOTLOADER_MODE_BOOTLOADER_WAIT_FOR_REBOOT 2
-#define VOC_BOOTLOADER_MODE_FIRMWARE_WAIT_FOR_REBOOT 3
-#define VOC_BOOTLOADER_MODE_FIRMWARE_WAIT_FOR_ERASE_AND_REBOOT 4
+#define AIR_QUALITY_BOOTLOADER_MODE_BOOTLOADER 0
+#define AIR_QUALITY_BOOTLOADER_MODE_FIRMWARE 1
+#define AIR_QUALITY_BOOTLOADER_MODE_BOOTLOADER_WAIT_FOR_REBOOT 2
+#define AIR_QUALITY_BOOTLOADER_MODE_FIRMWARE_WAIT_FOR_REBOOT 3
+#define AIR_QUALITY_BOOTLOADER_MODE_FIRMWARE_WAIT_FOR_ERASE_AND_REBOOT 4
 
-#define VOC_BOOTLOADER_STATUS_OK 0
-#define VOC_BOOTLOADER_STATUS_INVALID_MODE 1
-#define VOC_BOOTLOADER_STATUS_NO_CHANGE 2
-#define VOC_BOOTLOADER_STATUS_ENTRY_FUNCTION_NOT_PRESENT 3
-#define VOC_BOOTLOADER_STATUS_DEVICE_IDENTIFIER_INCORRECT 4
-#define VOC_BOOTLOADER_STATUS_CRC_MISMATCH 5
+#define AIR_QUALITY_BOOTLOADER_STATUS_OK 0
+#define AIR_QUALITY_BOOTLOADER_STATUS_INVALID_MODE 1
+#define AIR_QUALITY_BOOTLOADER_STATUS_NO_CHANGE 2
+#define AIR_QUALITY_BOOTLOADER_STATUS_ENTRY_FUNCTION_NOT_PRESENT 3
+#define AIR_QUALITY_BOOTLOADER_STATUS_DEVICE_IDENTIFIER_INCORRECT 4
+#define AIR_QUALITY_BOOTLOADER_STATUS_CRC_MISMATCH 5
 
-#define VOC_STATUS_LED_CONFIG_OFF 0
-#define VOC_STATUS_LED_CONFIG_ON 1
-#define VOC_STATUS_LED_CONFIG_SHOW_HEARTBEAT 2
-#define VOC_STATUS_LED_CONFIG_SHOW_STATUS 3
+#define AIR_QUALITY_STATUS_LED_CONFIG_OFF 0
+#define AIR_QUALITY_STATUS_LED_CONFIG_ON 1
+#define AIR_QUALITY_STATUS_LED_CONFIG_SHOW_HEARTBEAT 2
+#define AIR_QUALITY_STATUS_LED_CONFIG_SHOW_STATUS 3
 
 // Function and callback IDs and structs
 #define FID_GET_ALL_VALUES 1
@@ -81,6 +81,7 @@ void communication_init(void);
 #define FID_GET_AIR_PRESSURE 19
 #define FID_SET_AIR_PRESSURE_CALLBACK_CONFIGURATION 20
 #define FID_GET_AIR_PRESSURE_CALLBACK_CONFIGURATION 21
+#define FID_REMOVE_CALIBRATION 23
 
 #define FID_CALLBACK_ALL_VALUES 6
 #define FID_CALLBACK_IAQ_INDEX 10
@@ -133,6 +134,15 @@ typedef struct {
 
 typedef struct {
 	TFPMessageHeader header;
+	int32_t iaq_index;
+	uint8_t iaq_index_accuracy;
+	int32_t temperature;
+	int32_t humidity;
+	int32_t air_pressure;
+} __attribute__((__packed__)) AllValues_Callback;
+
+typedef struct {
+	TFPMessageHeader header;
 } __attribute__((__packed__)) GetIAQIndex;
 
 typedef struct {
@@ -161,16 +171,11 @@ typedef struct {
 	TFPMessageHeader header;
 	int32_t iaq_index;
 	uint8_t iaq_index_accuracy;
-	int32_t temperature;
-	int32_t humidity;
-	int32_t air_pressure;
-} __attribute__((__packed__)) AllValues_Callback;
+} __attribute__((__packed__)) IAQIndex_Callback;
 
 typedef struct {
 	TFPMessageHeader header;
-	int32_t iaq_index;
-	uint8_t iaq_index_accuracy;
-} __attribute__((__packed__)) IAQIndex_Callback;
+} __attribute__((__packed__)) RemoveCalibration;
 
 
 // Function prototypes
@@ -182,6 +187,7 @@ BootloaderHandleMessageResponse get_all_values_callback_configuration(const GetA
 BootloaderHandleMessageResponse get_iaq_index(const GetIAQIndex *data, GetIAQIndex_Response *response);
 BootloaderHandleMessageResponse set_iaq_index_callback_configuration(const SetIAQIndexCallbackConfiguration *data);
 BootloaderHandleMessageResponse get_iaq_index_callback_configuration(const GetIAQIndexCallbackConfiguration *data, GetIAQIndexCallbackConfiguration_Response *response);
+BootloaderHandleMessageResponse remove_calibration(const RemoveCalibration *data);
 
 // Callbacks
 bool handle_all_values_callback(void);

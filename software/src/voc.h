@@ -1,5 +1,5 @@
 /* air-quality-bricklet
- * Copyright (C) 2017 Olaf Lüke <olaf@tinkerforge.com>
+ * Copyright (C) 2017-2019 Olaf Lüke <olaf@tinkerforge.com>
  *
  * voc.h: Air Quality Bricklet read/write state machine
  *
@@ -79,6 +79,8 @@ extern VOC voc;
 
 void voc_init(void);
 void voc_tick(void);
+
+void voc_state_invalidate(void);
 
 int32_t voc_get_humidity(void);
 int32_t voc_get_temperature(void);

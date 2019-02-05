@@ -1,5 +1,5 @@
 /* air-quality-bricklet
- * Copyright (C) 2017 Olaf Lüke <olaf@tinkerforge.com>
+ * Copyright (C) 2017-2019 Olaf Lüke <olaf@tinkerforge.com>
  *
  * voc.c: Air Quality Bricklet read/write state machine
  *
@@ -299,6 +299,12 @@ uint16_t voc_state_load(uint8_t *data) {
 		 page[VOC_STATE_INFO_LENGTH_POS]);
 
 	return 0;
+}
+
+void voc_state_invalidate(void) {
+	uint32_t page[EEPROM_PAGE_SIZE/sizeof(uint32_t)] = {0};
+	bootloader_write_eeprom_page(VOC_STATE_DATA1_PAGE, page);
+	bootloader_write_eeprom_page(VOC_STATE_DATA2_PAGE, page);
 }
 
 void voc_state_save(uint8_t *data, const uint16_t length) {

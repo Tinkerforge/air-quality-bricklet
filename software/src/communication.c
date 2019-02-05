@@ -1,5 +1,5 @@
 /* air-quality-bricklet
- * Copyright (C) 2018 Olaf Lüke <olaf@tinkerforge.com>
+ * Copyright (C) 2018-2019 Olaf Lüke <olaf@tinkerforge.com>
  *
  * communication.c: TFP protocol message handling
  *
@@ -28,7 +28,6 @@
 
 #include "voc.h"
 
-// FIXME: use a different data types, now that callback-value supports that?
 CallbackValue_int32_t callback_value_humidity;
 CallbackValue_int32_t callback_value_temperature;
 CallbackValue_int32_t callback_value_air_pressure;
@@ -52,6 +51,7 @@ BootloaderHandleMessageResponse handle_message(const void *message, void *respon
 		case FID_GET_AIR_PRESSURE: return get_callback_value_int32_t(message, response, &callback_value_air_pressure);
 		case FID_SET_AIR_PRESSURE_CALLBACK_CONFIGURATION: return set_callback_value_callback_configuration_int32_t(message, &callback_value_air_pressure);
 		case FID_GET_AIR_PRESSURE_CALLBACK_CONFIGURATION: return get_callback_value_callback_configuration_int32_t(message, response, &callback_value_air_pressure);
+		case FID_REMOVE_CALIBRATION: return remove_calibration(message);
 		default: return HANDLE_MESSAGE_RESPONSE_NOT_SUPPORTED;
 	}
 }
@@ -113,6 +113,12 @@ BootloaderHandleMessageResponse get_iaq_index_callback_configuration(const GetIA
 	response->period              = voc.iaq_index_callback_period;
 
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
+}
+
+BootloaderHandleMessageResponse remove_calibration(const RemoveCalibration *data) {
+	voc_state_invalidate();
+
+	return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
 
 bool handle_all_values_callback(void) {
