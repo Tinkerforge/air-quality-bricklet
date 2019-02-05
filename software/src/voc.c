@@ -117,47 +117,47 @@ void voc_task_update_config(void) {
 }
 
 void voc_task_bsec_trigger_measurement(bsec_bme_settings_t *sensor_settings) {
-    // Check if a forced-mode measurement should be triggered now
-    if(sensor_settings->trigger_measurement) {
-        // Set sensor configuration
-        voc.bme680.tph_sett.os_hum     = sensor_settings->humidity_oversampling;
-        voc.bme680.tph_sett.os_pres    = sensor_settings->pressure_oversampling;
-        voc.bme680.tph_sett.os_temp    = sensor_settings->temperature_oversampling;
-        voc.bme680.gas_sett.run_gas    = sensor_settings->run_gas;
-        voc.bme680.gas_sett.heatr_temp = sensor_settings->heater_temperature;
-        voc.bme680.gas_sett.heatr_dur  = sensor_settings->heating_duration;
-        voc.bme680.power_mode          = BME680_FORCED_MODE;
-        bme680_set_sensor_settings(BME680_OST_SEL | BME680_OSP_SEL | BME680_OSH_SEL | BME680_GAS_SENSOR_SEL, &voc.bme680);
+	// Check if a forced-mode measurement should be triggered now
+	if(sensor_settings->trigger_measurement) {
+		// Set sensor configuration
+		voc.bme680.tph_sett.os_hum     = sensor_settings->humidity_oversampling;
+		voc.bme680.tph_sett.os_pres	   = sensor_settings->pressure_oversampling;
+		voc.bme680.tph_sett.os_temp	   = sensor_settings->temperature_oversampling;
+		voc.bme680.gas_sett.run_gas	   = sensor_settings->run_gas;
+		voc.bme680.gas_sett.heatr_temp = sensor_settings->heater_temperature;
+		voc.bme680.gas_sett.heatr_dur  = sensor_settings->heating_duration;
+		voc.bme680.power_mode          = BME680_FORCED_MODE;
+		bme680_set_sensor_settings(BME680_OST_SEL | BME680_OSP_SEL | BME680_OSH_SEL | BME680_GAS_SENSOR_SEL, &voc.bme680);
 
-        // Set power mode as forced mode and trigger forced mode measurement
-        bme680_set_sensor_mode(&voc.bme680);
+		// Set power mode as forced mode and trigger forced mode measurement
+		bme680_set_sensor_mode(&voc.bme680);
 
-        // Delay until the measurement is ready.
-        uint16_t period;
+		// Delay until the measurement is ready.
+		uint16_t period;
 		bme680_get_profile_dur(&period, &voc.bme680);
 		coop_task_sleep_ms(period);
-    }
+	}
 
-    bme680_get_sensor_mode(&voc.bme680);
+	bme680_get_sensor_mode(&voc.bme680);
 
-    // When the measurement is completed and data is ready for reading, the sensor must be in BME680_SLEEP_MODE.
-    // Read operation mode to check whether measurement is completely done and wait until the sensor is no more
-    // in BME680_FORCED_MODE.
-    while(voc.bme680.power_mode == BME680_FORCED_MODE) {
-        coop_task_sleep_ms(5);
-        bme680_get_sensor_mode(&voc.bme680);
-    }
+	// When the measurement is completed and data is ready for reading, the sensor must be in BME680_SLEEP_MODE.
+	// Read operation mode to check whether measurement is completely done and wait until the sensor is no more
+	// in BME680_FORCED_MODE.
+	while(voc.bme680.power_mode == BME680_FORCED_MODE) {
+		coop_task_sleep_ms(5);
+		bme680_get_sensor_mode(&voc.bme680);
+	}
 }
 
 int8_t voc_task_bsec_read_data(int64_t time_stamp_trigger, bsec_input_t *inputs, uint8_t *num_bsec_inputs, int32_t bsec_process_data) {
-    static struct bme680_field_data data;
+	static struct bme680_field_data data;
 	static float last_temperature = -10000;
 
-    // We only have to read data if the previous call the bsec_sensor_control() asked for it
-    if(bsec_process_data) {
+	// We only have to read data if the previous call the bsec_sensor_control() asked for it
+	if(bsec_process_data) {
 		int8_t result = bme680_get_sensor_data(&data, &voc.bme680);
 		if(result != BME680_OK) {
-        	logd("Unexpected bme680_get_sensor_data result: %d\n\r", result);
+			logd("Unexpected bme680_get_sensor_data result: %d\n\r", result);
 			return result;
 		}
 
@@ -169,123 +169,123 @@ int8_t voc_task_bsec_read_data(int64_t time_stamp_trigger, bsec_input_t *inputs,
 		}
 		last_temperature = data.temperature;
 
-        if(data.status & BME680_NEW_DATA_MSK) {
-            // Pressure to be processed by BSEC
-            if(bsec_process_data & BSEC_PROCESS_PRESSURE) {
-                // Place presssure sample into input struct
-                inputs[*num_bsec_inputs].sensor_id = BSEC_INPUT_PRESSURE;
-                inputs[*num_bsec_inputs].signal = data.pressure;
-                inputs[*num_bsec_inputs].time_stamp = time_stamp_trigger;
-                (*num_bsec_inputs)++;
-            }
+		if(data.status & BME680_NEW_DATA_MSK) {
+			// Pressure to be processed by BSEC
+			if(bsec_process_data & BSEC_PROCESS_PRESSURE) {
+				// Place presssure sample into input struct
+				inputs[*num_bsec_inputs].sensor_id = BSEC_INPUT_PRESSURE;
+				inputs[*num_bsec_inputs].signal = data.pressure;
+				inputs[*num_bsec_inputs].time_stamp = time_stamp_trigger;
+				(*num_bsec_inputs)++;
+			}
 
-            // Temperature to be processed by BSEC
-            if(bsec_process_data & BSEC_PROCESS_TEMPERATURE) {
-                // Place temperature sample into input struct
-                inputs[*num_bsec_inputs].sensor_id = BSEC_INPUT_TEMPERATURE;
-                inputs[*num_bsec_inputs].signal = data.temperature;
-                inputs[*num_bsec_inputs].time_stamp = time_stamp_trigger;
-                (*num_bsec_inputs)++;
+			// Temperature to be processed by BSEC
+			if(bsec_process_data & BSEC_PROCESS_TEMPERATURE) {
+				// Place temperature sample into input struct
+				inputs[*num_bsec_inputs].sensor_id = BSEC_INPUT_TEMPERATURE;
+				inputs[*num_bsec_inputs].signal = data.temperature;
+				inputs[*num_bsec_inputs].time_stamp = time_stamp_trigger;
+				(*num_bsec_inputs)++;
 
-                // Add optional heatsource input which will be subtracted from the temperature reading to
-                // compensate for device-specific self-heating (supported in BSEC IAQ solution)
+				// Add optional heatsource input which will be subtracted from the temperature reading to
+				// compensate for device-specific self-heating (supported in BSEC IAQ solution)
 
-                // In our tests we found that the XMC1400 adds about 0.5°C above ambient to the
-                // temperature of the circuit board (tested in room temperature conditions).
+				// In our tests we found that the XMC1400 adds about 0.5°C above ambient to the
+				// temperature of the circuit board (tested in room temperature conditions).
 				//
 				// Additionally we add the user defined offset. This is useful if the Bricklet
 				// is mounted in an enclosure with additional heat sources (for example).
-                inputs[*num_bsec_inputs].sensor_id = BSEC_INPUT_HEATSOURCE;
-                inputs[*num_bsec_inputs].signal = 0.5 + voc.temperature_offset / 100.0f;
-                inputs[*num_bsec_inputs].time_stamp = time_stamp_trigger;
-                (*num_bsec_inputs)++;
-            }
+				inputs[*num_bsec_inputs].sensor_id = BSEC_INPUT_HEATSOURCE;
+				inputs[*num_bsec_inputs].signal = 0.5 + voc.temperature_offset / 100.0f;
+				inputs[*num_bsec_inputs].time_stamp = time_stamp_trigger;
+				(*num_bsec_inputs)++;
+			}
 
-            // Humidity to be processed by BSEC
-            if(bsec_process_data & BSEC_PROCESS_HUMIDITY) {
-                // Place humidity sample into input struct
-                inputs[*num_bsec_inputs].sensor_id = BSEC_INPUT_HUMIDITY;
-                inputs[*num_bsec_inputs].signal = data.humidity;
-                inputs[*num_bsec_inputs].time_stamp = time_stamp_trigger;
-                (*num_bsec_inputs)++;
-            }
+			// Humidity to be processed by BSEC
+			if(bsec_process_data & BSEC_PROCESS_HUMIDITY) {
+				// Place humidity sample into input struct
+				inputs[*num_bsec_inputs].sensor_id = BSEC_INPUT_HUMIDITY;
+				inputs[*num_bsec_inputs].signal = data.humidity;
+				inputs[*num_bsec_inputs].time_stamp = time_stamp_trigger;
+				(*num_bsec_inputs)++;
+			}
 
-            // Gas to be processed by BSEC
-            if(bsec_process_data & BSEC_PROCESS_GAS) {
-                // Check whether gas_valid flag is set
-                if(data.status & BME680_GASM_VALID_MSK) {
-                    // Place sample into input struct
-                    inputs[*num_bsec_inputs].sensor_id = BSEC_INPUT_GASRESISTOR;
-                    inputs[*num_bsec_inputs].signal = data.gas_resistance;
-                    inputs[*num_bsec_inputs].time_stamp = time_stamp_trigger;
-                    (*num_bsec_inputs)++;
-                }
-            }
-        }
-    }
+			// Gas to be processed by BSEC
+			if(bsec_process_data & BSEC_PROCESS_GAS) {
+				// Check whether gas_valid flag is set
+				if(data.status & BME680_GASM_VALID_MSK) {
+					// Place sample into input struct
+					inputs[*num_bsec_inputs].sensor_id = BSEC_INPUT_GASRESISTOR;
+					inputs[*num_bsec_inputs].signal = data.gas_resistance;
+					inputs[*num_bsec_inputs].time_stamp = time_stamp_trigger;
+					(*num_bsec_inputs)++;
+				}
+			}
+		}
+	}
 
 	return BME680_OK;
 }
 
 bsec_library_return_t voc_task_bsec_process_data(bsec_input_t *bsec_inputs, uint8_t num_bsec_inputs) {
-    // Output buffer set to the maximum virtual sensor outputs supported
-    bsec_output_t bsec_outputs[BSEC_NUMBER_OUTPUTS];
-    uint8_t num_bsec_outputs = 0;
-    uint8_t index = 0;
+	// Output buffer set to the maximum virtual sensor outputs supported
+	bsec_output_t bsec_outputs[BSEC_NUMBER_OUTPUTS];
+	uint8_t num_bsec_outputs = 0;
+	uint8_t index = 0;
 
-    // Check if something should be processed by BSEC
-    if(num_bsec_inputs > 0) {
-        // Set number of outputs to the size of the allocated buffer
-        // BSEC_NUMBER_OUTPUTS to be defined
-        num_bsec_outputs = BSEC_NUMBER_OUTPUTS;
+	// Check if something should be processed by BSEC
+	if(num_bsec_inputs > 0) {
+		// Set number of outputs to the size of the allocated buffer
+		// BSEC_NUMBER_OUTPUTS to be defined
+		num_bsec_outputs = BSEC_NUMBER_OUTPUTS;
 
-        // Perform processing of the data by BSEC
-        //   Note:
-        //   * The number of outputs you get depends on what you asked for during bsec_update_subscription(). This is
-        //     handled under bme680_bsec_update_subscription() function in this example file.
-        //   * The number of actual outputs that are returned is written to num_bsec_outputs.
-        bsec_library_return_t status = bsec_do_steps(bsec_inputs, num_bsec_inputs, bsec_outputs, &num_bsec_outputs);
-        if(status != BSEC_OK) {
-        	logd("Unexpected bsec_do_steps status: %d\n\r", status);
+		// Perform processing of the data by BSEC
+		//   Note:
+		//   * The number of outputs you get depends on what you asked for during bsec_update_subscription(). This is
+		//	 handled under bme680_bsec_update_subscription() function in this example file.
+		//   * The number of actual outputs that are returned is written to num_bsec_outputs.
+		bsec_library_return_t status = bsec_do_steps(bsec_inputs, num_bsec_inputs, bsec_outputs, &num_bsec_outputs);
+		if(status != BSEC_OK) {
+			logd("Unexpected bsec_do_steps status: %d\n\r", status);
 			return status;
-        }
+		}
 
-        // Iterate through the outputs and extract the relevant ones.
-        for(index = 0; index < num_bsec_outputs; index++) {
-            switch(bsec_outputs[index].sensor_id) {
-                case BSEC_OUTPUT_IAQ:
-                    voc.iaq_index = (int32_t)bsec_outputs[index].signal;
-                    voc.iaq_accuracy = bsec_outputs[index].accuracy;
-                    break;
-                case BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_TEMPERATURE:
-                    voc.compensated_temperature = (int32_t)(bsec_outputs[index].signal*100);
-                    break;
-                case BSEC_OUTPUT_RAW_PRESSURE:
-                    voc.raw_air_pressure = (int32_t)bsec_outputs[index].signal;
-                    break;
-                case BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_HUMIDITY:
-                    voc.compensated_humidity = (int32_t)(bsec_outputs[index].signal*100);
-                    break;
-                case BSEC_OUTPUT_RAW_GAS:
-                    voc.raw_gas = (int32_t)bsec_outputs[index].signal;
-                    break;
-                case BSEC_OUTPUT_RAW_TEMPERATURE:
-                    voc.raw_temperature = (int32_t)(bsec_outputs[index].signal*100);
-                    break;
-                case BSEC_OUTPUT_RAW_HUMIDITY:
-                    voc.raw_humidity = (int32_t)(bsec_outputs[index].signal*100);
-                    break;
-                case BSEC_OUTPUT_STABILIZATION_STATUS:
-                    voc.stabilization_status = (uint8_t)bsec_outputs[index].signal;
-                    break;
-                case BSEC_OUTPUT_RUN_IN_STATUS:
-                    voc.run_in_status = (uint8_t)bsec_outputs[index].signal;
-                    break;
-                default:
-                    continue;
-            }
-        }
-    }
+		// Iterate through the outputs and extract the relevant ones.
+		for(index = 0; index < num_bsec_outputs; index++) {
+			switch(bsec_outputs[index].sensor_id) {
+				case BSEC_OUTPUT_IAQ:
+					voc.iaq_index = (int32_t)bsec_outputs[index].signal;
+					voc.iaq_accuracy = bsec_outputs[index].accuracy;
+					break;
+				case BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_TEMPERATURE:
+					voc.compensated_temperature = (int32_t)(bsec_outputs[index].signal*100);
+					break;
+				case BSEC_OUTPUT_RAW_PRESSURE:
+					voc.raw_air_pressure = (int32_t)bsec_outputs[index].signal;
+					break;
+				case BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_HUMIDITY:
+					voc.compensated_humidity = (int32_t)(bsec_outputs[index].signal*100);
+					break;
+				case BSEC_OUTPUT_RAW_GAS:
+					voc.raw_gas = (int32_t)bsec_outputs[index].signal;
+					break;
+				case BSEC_OUTPUT_RAW_TEMPERATURE:
+					voc.raw_temperature = (int32_t)(bsec_outputs[index].signal*100);
+					break;
+				case BSEC_OUTPUT_RAW_HUMIDITY:
+					voc.raw_humidity = (int32_t)(bsec_outputs[index].signal*100);
+					break;
+				case BSEC_OUTPUT_STABILIZATION_STATUS:
+					voc.stabilization_status = (uint8_t)bsec_outputs[index].signal;
+					break;
+				case BSEC_OUTPUT_RUN_IN_STATUS:
+					voc.run_in_status = (uint8_t)bsec_outputs[index].signal;
+					break;
+				default:
+					continue;
+			}
+		}
+	}
 
 	return BSEC_OK;
 }
@@ -311,7 +311,7 @@ uint16_t voc_state_load(uint8_t *data) {
 	}
 
 	logd("Unexpected state: magic %u = %u, checksum %u = %u, length %u\n\r",
-	     page[VOC_STATE_INFO_MAGIC_POS],
+		 page[VOC_STATE_INFO_MAGIC_POS],
 		 VOC_STATE_MAGIC,
 		 page[VOC_STATE_INFO_CHECKSUM_POS],
 		 checksum,
@@ -345,7 +345,7 @@ void voc_state_save(uint8_t *data, const uint16_t length) {
 	}
 
 	// Write magic, length and checksum to second page
-	page[VOC_STATE_INFO_MAGIC_POS]    = VOC_STATE_MAGIC;
+	page[VOC_STATE_INFO_MAGIC_POS]	= VOC_STATE_MAGIC;
 	page[VOC_STATE_INFO_LENGTH_POS]   = length;
 	page[VOC_STATE_INFO_CHECKSUM_POS] = checksum;
 
@@ -371,47 +371,47 @@ void voc_tick_task_init(void) {
 	uint8_t bsec_state_work_buffer[BSEC_MAX_PROPERTY_BLOB_SIZE];
 
 	uint16_t length = voc_state_load(bsec_state);
-    if(length != 0) {
-        bsec_library_return_t status = bsec_set_state(bsec_state, length, bsec_state_work_buffer, BSEC_MAX_PROPERTY_BLOB_SIZE);
-        if(status != BSEC_OK) {
+	if(length != 0) {
+		bsec_library_return_t status = bsec_set_state(bsec_state, length, bsec_state_work_buffer, BSEC_MAX_PROPERTY_BLOB_SIZE);
+		if(status != BSEC_OK) {
 			logw("Unexpected status during state set: %d\n\r", status);
-        } else {
-        	logd("BSEC state read from flash\n\r");
-        }
-    } else {
-    	logd("No BSEC state found in flash\n\r");
-    }
+		} else {
+			logd("BSEC state read from flash\n\r");
+		}
+	} else {
+		logd("No BSEC state found in flash\n\r");
+	}
 
-    bsec_sensor_configuration_t requested_virtual_sensors[9];
-    uint8_t requested_virtual_sensors_num = 9;
+	bsec_sensor_configuration_t requested_virtual_sensors[9];
+	uint8_t requested_virtual_sensors_num = 9;
 
-    bsec_sensor_configuration_t required_sensor_settings[BSEC_MAX_PHYSICAL_SENSOR];
-    uint8_t required_sensor_settings_num = BSEC_MAX_PHYSICAL_SENSOR;
+	bsec_sensor_configuration_t required_sensor_settings[BSEC_MAX_PHYSICAL_SENSOR];
+	uint8_t required_sensor_settings_num = BSEC_MAX_PHYSICAL_SENSOR;
 
-    // TODO: The lowest sample rate in the BOSCH config is "BSEC_SAMPLE_RATE_LP",
-    // which corresponds to one sample for each 3 seconds. Per trial and error we found
-    // that it works with 1 sample per second, but breaks if we increase the rate.
-    // Is it OK to put this to 1 SPS or should we decrease it to 0.33 SPS?
-    requested_virtual_sensors[0].sensor_id = BSEC_OUTPUT_IAQ;
-    requested_virtual_sensors[0].sample_rate = BSEC_SAMPLE_RATE_LP;
-    requested_virtual_sensors[1].sensor_id = BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_TEMPERATURE;
-    requested_virtual_sensors[1].sample_rate = BSEC_SAMPLE_RATE_LP;
-    requested_virtual_sensors[2].sensor_id = BSEC_OUTPUT_RAW_PRESSURE;
-    requested_virtual_sensors[2].sample_rate = BSEC_SAMPLE_RATE_LP;
-    requested_virtual_sensors[3].sensor_id = BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_HUMIDITY;
-    requested_virtual_sensors[3].sample_rate = BSEC_SAMPLE_RATE_LP;
-    requested_virtual_sensors[4].sensor_id = BSEC_OUTPUT_RAW_GAS;
-    requested_virtual_sensors[4].sample_rate = BSEC_SAMPLE_RATE_LP;
-    requested_virtual_sensors[5].sensor_id = BSEC_OUTPUT_RAW_TEMPERATURE;
-    requested_virtual_sensors[5].sample_rate = BSEC_SAMPLE_RATE_LP;
-    requested_virtual_sensors[6].sensor_id = BSEC_OUTPUT_RAW_HUMIDITY;
-    requested_virtual_sensors[6].sample_rate = BSEC_SAMPLE_RATE_LP;
-    requested_virtual_sensors[7].sensor_id = BSEC_OUTPUT_STABILIZATION_STATUS;
-    requested_virtual_sensors[7].sample_rate = BSEC_SAMPLE_RATE_LP;
-    requested_virtual_sensors[8].sensor_id = BSEC_OUTPUT_RUN_IN_STATUS;
-    requested_virtual_sensors[8].sample_rate = BSEC_SAMPLE_RATE_LP;
+	// TODO: The lowest sample rate in the BOSCH config is "BSEC_SAMPLE_RATE_LP",
+	// which corresponds to one sample for each 3 seconds. Per trial and error we found
+	// that it works with 1 sample per second, but breaks if we increase the rate.
+	// Is it OK to put this to 1 SPS or should we decrease it to 0.33 SPS?
+	requested_virtual_sensors[0].sensor_id = BSEC_OUTPUT_IAQ;
+	requested_virtual_sensors[0].sample_rate = BSEC_SAMPLE_RATE_LP;
+	requested_virtual_sensors[1].sensor_id = BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_TEMPERATURE;
+	requested_virtual_sensors[1].sample_rate = BSEC_SAMPLE_RATE_LP;
+	requested_virtual_sensors[2].sensor_id = BSEC_OUTPUT_RAW_PRESSURE;
+	requested_virtual_sensors[2].sample_rate = BSEC_SAMPLE_RATE_LP;
+	requested_virtual_sensors[3].sensor_id = BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_HUMIDITY;
+	requested_virtual_sensors[3].sample_rate = BSEC_SAMPLE_RATE_LP;
+	requested_virtual_sensors[4].sensor_id = BSEC_OUTPUT_RAW_GAS;
+	requested_virtual_sensors[4].sample_rate = BSEC_SAMPLE_RATE_LP;
+	requested_virtual_sensors[5].sensor_id = BSEC_OUTPUT_RAW_TEMPERATURE;
+	requested_virtual_sensors[5].sample_rate = BSEC_SAMPLE_RATE_LP;
+	requested_virtual_sensors[6].sensor_id = BSEC_OUTPUT_RAW_HUMIDITY;
+	requested_virtual_sensors[6].sample_rate = BSEC_SAMPLE_RATE_LP;
+	requested_virtual_sensors[7].sensor_id = BSEC_OUTPUT_STABILIZATION_STATUS;
+	requested_virtual_sensors[7].sample_rate = BSEC_SAMPLE_RATE_LP;
+	requested_virtual_sensors[8].sensor_id = BSEC_OUTPUT_RUN_IN_STATUS;
+	requested_virtual_sensors[8].sample_rate = BSEC_SAMPLE_RATE_LP;
 
-    bsec_update_subscription(requested_virtual_sensors, requested_virtual_sensors_num, required_sensor_settings, &required_sensor_settings_num);
+	bsec_update_subscription(requested_virtual_sensors, requested_virtual_sensors_num, required_sensor_settings, &required_sensor_settings_num);
 }
 
 uint64_t voc_get_timestamp(void) {
@@ -441,36 +441,36 @@ void voc_tick_task(void) {
 			continue;
 		}
 
-        // Give data to BSEC for processing
+		// Give data to BSEC for processing
 		if(voc_task_bsec_process_data(bsec_inputs, num_bsec_inputs) != BSEC_OK) {
 			continue;
 		}
-        
+
 		// Update saved state if 12 hours are elapsed since last save
 		// At 50000 page erase cycles (see XMC1400 datasheet page 10.1.1) and 2 pages written per state save
 		// we expect the flash to live for about ~30 years of continuous usage.
 		if(system_timer_is_time_elapsed_ms(timestamp_state, 1000*60*60*12)) {
 			uint8_t bsec_state[BSEC_MAX_PROPERTY_BLOB_SIZE];
-		    uint8_t bsec_state_work_buffer[BSEC_MAX_PROPERTY_BLOB_SIZE];
+			uint8_t bsec_state_work_buffer[BSEC_MAX_PROPERTY_BLOB_SIZE];
 			uint32_t bsec_state_length = 0;
 			
 			bsec_library_return_t status = bsec_get_state(0, bsec_state, BSEC_MAX_PROPERTY_BLOB_SIZE, bsec_state_work_buffer, BSEC_MAX_PROPERTY_BLOB_SIZE, &bsec_state_length);
 			if(status == BSEC_OK) {
-	            voc_state_save(bsec_state, bsec_state_length);
-	            logd("New state saved, time: %u\n\r", timestamp_state);
+				voc_state_save(bsec_state, bsec_state_length);
+				logd("New state saved, time: %u\n\r", timestamp_state);
 			} else {
 				logw("Unexpected status during state save: %d\n\r", status);
 			}
 
 			timestamp_state = system_timer_get_ms();
-        }
+		}
 
-        // Refresh timestamp and check how long we have to sleep
-        timestamp = voc_get_timestamp();
-        if(settings.next_call > timestamp) {
-        	uint32_t sleep_time = (settings.next_call - timestamp)/(1000*1000);
-        	coop_task_sleep_ms(sleep_time);
-        }
+		// Refresh timestamp and check how long we have to sleep
+		timestamp = voc_get_timestamp();
+		if(settings.next_call > timestamp) {
+			uint32_t sleep_time = (settings.next_call - timestamp)/(1000*1000);
+			coop_task_sleep_ms(sleep_time);
+		}
 	}
 }
 
@@ -531,8 +531,8 @@ void voc_init(void) {
 
 	// Configure the clock polarity and clock delay
 	XMC_SPI_CH_ConfigureShiftClockOutput(BME680_USIC,
-									     XMC_SPI_CH_BRG_SHIFT_CLOCK_PASSIVE_LEVEL_1_DELAY_DISABLED,
-									     XMC_SPI_CH_BRG_SHIFT_CLOCK_OUTPUT_SCLK);
+	                                     XMC_SPI_CH_BRG_SHIFT_CLOCK_PASSIVE_LEVEL_1_DELAY_DISABLED,
+	                                     XMC_SPI_CH_BRG_SHIFT_CLOCK_OUTPUT_SCLK);
 	// Configure Leading/Trailing delay
 	XMC_SPI_CH_SetSlaveSelectDelay(BME680_USIC, 2);
 
