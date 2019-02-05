@@ -446,7 +446,7 @@ void voc_tick_task(void) {
         timestamp = voc_get_timestamp();
         if(settings.next_call > timestamp) {
         	uint32_t sleep_time = (settings.next_call - timestamp)/(1000*1000);
-        	coop_task_sleep_ms(sleep_time+1);
+        	coop_task_sleep_ms(sleep_time);
         }
 	}
 }
