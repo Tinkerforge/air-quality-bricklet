@@ -36,11 +36,16 @@
 #define VOC_STATE_DATA2_PAGE        2
 
 // Info is written at end of data2 page
+#define VOC_STATE_INFO_DURATION_POS (EEPROM_PAGE_SIZE/sizeof(uint32_t) - 4)
 #define VOC_STATE_INFO_MAGIC_POS    (EEPROM_PAGE_SIZE/sizeof(uint32_t) - 3)
 #define VOC_STATE_INFO_LENGTH_POS   (EEPROM_PAGE_SIZE/sizeof(uint32_t) - 2)
 #define VOC_STATE_INFO_CHECKSUM_POS (EEPROM_PAGE_SIZE/sizeof(uint32_t) - 1)
 
-#define VOC_STATE_MAGIC           0x12345678
+// Increase magic number in firmware version 2.0.3, to make sure
+// that the old calibration is discarded and a new one is started.
+// We need to do this since we updated the BSEC and it seems like
+// the old calibration data is not compatible.
+#define VOC_STATE_MAGIC             (0x12345678 + 1)
 
 typedef struct {
 	struct bme680_dev bme680;
@@ -73,6 +78,9 @@ typedef struct {
 	uint32_t iaq_index_callback_period;
 
 	int32_t temperature_offset;
+
+	uint8_t calibration_duration;
+	bool new_calibration_duration;
 } VOC;
 
 extern VOC voc;

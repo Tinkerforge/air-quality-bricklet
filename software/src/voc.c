@@ -38,9 +38,13 @@
 
 #include "bsec_interface.h"
 #include "bsec_datatypes.h"
+#include "communication.h"
 
 // Config for 3.3V, 3 seconds, 4 days
-const uint8_t voc_config_iaq_33v_3s_4d[BSEC_MAX_PROPERTY_BLOB_SIZE] = {1,7,4,1,61,0,0,0,0,0,0,0,174,1,0,0,48,0,1,0,137,65,0,63,205,204,204,62,0,0,64,63,205,204,204,62,0,0,225,68,0,192,168,71,64,49,119,76,0,0,0,0,0,80,5,95,0,0,0,0,0,0,0,0,28,0,2,0,0,244,1,225,0,25,0,0,128,64,0,0,32,65,144,1,0,0,112,65,0,0,0,63,16,0,3,0,10,215,163,60,10,215,35,59,10,215,35,59,9,0,5,0,0,0,0,0,1,88,0,9,0,229,208,34,62,0,0,0,0,0,0,0,0,218,27,156,62,225,11,67,64,0,0,160,64,0,0,0,0,0,0,0,0,94,75,72,189,93,254,159,64,66,62,160,191,0,0,0,0,0,0,0,0,33,31,180,190,138,176,97,64,65,241,99,190,0,0,0,0,0,0,0,0,167,121,71,61,165,189,41,192,184,30,189,64,12,0,10,0,0,0,0,0,0,0,0,0,229,0,254,0,2,1,5,48,117,100,0,44,1,112,23,151,7,132,3,197,0,92,4,144,1,64,1,64,1,144,1,48,117,48,117,48,117,48,117,100,0,100,0,100,0,48,117,48,117,48,117,100,0,100,0,48,117,48,117,100,0,100,0,100,0,100,0,48,117,48,117,48,117,100,0,100,0,100,0,48,117,48,117,100,0,100,0,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,8,7,8,7,8,7,8,7,8,7,8,7,8,7,8,7,8,7,8,7,8,7,8,7,8,7,8,7,112,23,112,23,112,23,112,23,112,23,112,23,112,23,112,23,112,23,112,23,112,23,112,23,112,23,112,23,255,255,255,255,255,255,255,255,220,5,220,5,220,5,255,255,255,255,255,255,220,5,220,5,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,44,1,0,0,0,0,239,79,0,0};
+const uint8_t voc_config_iaq_33v_3s_4d[BSEC_MAX_PROPERTY_BLOB_SIZE]  = {1,7,4,1,61,0,0,0,0,0,0,0,174,1,0,0,48,0,1,0,137,65,0,63,205,204,204,62,0,0,64,63,205,204,204,62,0,0,225,68,0,192,168,71,64,49,119,76,0,0,0,0,0,80,5,95,0,0,0,0,0,0,0,0,28,0,2,0,0,244,1,225,0,25,0,0,128,64,0,0,32,65,144,1,0,0,112,65,0,0,0,63,16,0,3,0,10,215,163,60,10,215,35,59,10,215,35,59,9,0,5,0,0,0,0,0,1,88,0,9,0,229,208,34,62,0,0,0,0,0,0,0,0,218,27,156,62,225,11,67,64,0,0,160,64,0,0,0,0,0,0,0,0,94,75,72,189,93,254,159,64,66,62,160,191,0,0,0,0,0,0,0,0,33,31,180,190,138,176,97,64,65,241,99,190,0,0,0,0,0,0,0,0,167,121,71,61,165,189,41,192,184,30,189,64,12,0,10,0,0,0,0,0,0,0,0,0,229,0,254,0,2,1,5,48,117,100,0,44,1,112,23,151,7,132,3,197,0,92,4,144,1,64,1,64,1,144,1,48,117,48,117,48,117,48,117,100,0,100,0,100,0,48,117,48,117,48,117,100,0,100,0,48,117,48,117,100,0,100,0,100,0,100,0,48,117,48,117,48,117,100,0,100,0,100,0,48,117,48,117,100,0,100,0,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,8,7,8,7,8,7,8,7,8,7,8,7,8,7,8,7,8,7,8,7,8,7,8,7,8,7,8,7,112,23,112,23,112,23,112,23,112,23,112,23,112,23,112,23,112,23,112,23,112,23,112,23,112,23,112,23,255,255,255,255,255,255,255,255,220,5,220,5,220,5,255,255,255,255,255,255,220,5,220,5,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,44,1,0,0,0,0,239,79,0,0};
+
+// Config for 3.3V, 3 seconds, 28 days
+const uint8_t voc_config_iaq_33v_3s_28d[BSEC_MAX_PROPERTY_BLOB_SIZE] = {1,7,4,1,61,0,0,0,0,0,0,0,174,1,0,0,48,0,1,0,137,65,0,63,205,204,204,62,0,0,64,63,205,204,204,62,0,0,225,68,0,168,19,73,64,49,119,76,0,0,0,0,0,80,5,95,0,0,0,0,0,0,0,0,28,0,2,0,0,244,1,225,0,25,0,0,128,64,0,0,32,65,144,1,0,0,112,65,0,0,0,63,16,0,3,0,10,215,163,60,10,215,35,59,10,215,35,59,9,0,5,0,0,0,0,0,1,88,0,9,0,229,208,34,62,0,0,0,0,0,0,0,0,218,27,156,62,225,11,67,64,0,0,160,64,0,0,0,0,0,0,0,0,94,75,72,189,93,254,159,64,66,62,160,191,0,0,0,0,0,0,0,0,33,31,180,190,138,176,97,64,65,241,99,190,0,0,0,0,0,0,0,0,167,121,71,61,165,189,41,192,184,30,189,64,12,0,10,0,0,0,0,0,0,0,0,0,229,0,254,0,2,1,5,48,117,100,0,44,1,112,23,151,7,132,3,197,0,92,4,144,1,64,1,64,1,144,1,48,117,48,117,48,117,48,117,100,0,100,0,100,0,48,117,48,117,48,117,100,0,100,0,48,117,48,117,100,0,100,0,100,0,100,0,48,117,48,117,48,117,100,0,100,0,100,0,48,117,48,117,100,0,100,0,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,44,1,8,7,8,7,8,7,8,7,8,7,8,7,8,7,8,7,8,7,8,7,8,7,8,7,8,7,8,7,112,23,112,23,112,23,112,23,112,23,112,23,112,23,112,23,112,23,112,23,112,23,112,23,112,23,112,23,255,255,255,255,255,255,255,255,220,5,220,5,220,5,255,255,255,255,255,255,220,5,220,5,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,44,1,0,0,0,0,50,91,0,0};
 
 VOC voc;
 CoopTask voc_task;
@@ -307,8 +311,17 @@ uint16_t voc_state_load(uint8_t *data) {
 	}
 
 	if((page[VOC_STATE_INFO_MAGIC_POS] == VOC_STATE_MAGIC) && (page[VOC_STATE_INFO_CHECKSUM_POS] == checksum) && (page[VOC_STATE_INFO_LENGTH_POS] <= BSEC_MAX_PROPERTY_BLOB_SIZE)) {
+		if(page[VOC_STATE_INFO_DURATION_POS] == AIR_QUALITY_DURATION_4_DAYS) {
+			voc.calibration_duration = AIR_QUALITY_DURATION_4_DAYS;
+		} else {
+			voc.calibration_duration = AIR_QUALITY_DURATION_28_DAYS;
+		}
+
 		return page[VOC_STATE_INFO_LENGTH_POS];
 	}
+
+	// Default duration is 28 days		
+	voc.calibration_duration = AIR_QUALITY_DURATION_28_DAYS;
 
 	logd("Unexpected state: magic %u = %u, checksum %u = %u, length %u\n\r",
 		 page[VOC_STATE_INFO_MAGIC_POS],
@@ -345,9 +358,10 @@ void voc_state_save(uint8_t *data, const uint16_t length) {
 	}
 
 	// Write magic, length and checksum to second page
-	page[VOC_STATE_INFO_MAGIC_POS]	= VOC_STATE_MAGIC;
+	page[VOC_STATE_INFO_MAGIC_POS]	  = VOC_STATE_MAGIC;
 	page[VOC_STATE_INFO_LENGTH_POS]   = length;
 	page[VOC_STATE_INFO_CHECKSUM_POS] = checksum;
+	page[VOC_STATE_INFO_DURATION_POS] = voc.calibration_duration;
 
 	bootloader_write_eeprom_page(VOC_STATE_DATA2_PAGE, page);
 }
@@ -363,14 +377,17 @@ void voc_tick_task_init(void) {
 	ret = bsec_get_version(&bsec_version_p);
 	logd("BME680 BSEC version: %d.%d.%d.%d\n\r", bsec_version_p.major, bsec_version_p.minor, bsec_version_p.major_bugfix, bsec_version_p.minor_bugfix);
 
-	bsec_set_configuration(voc_config_iaq_33v_3s_4d, BSEC_MAX_PROPERTY_BLOB_SIZE, voc.work_buffer, BSEC_MAX_PROPERTY_BLOB_SIZE);
-
-	
 	// Load previous BSEC state (if available) and use it
 	uint8_t bsec_state[BSEC_MAX_PROPERTY_BLOB_SIZE];
 	uint8_t bsec_state_work_buffer[BSEC_MAX_PROPERTY_BLOB_SIZE];
 
 	uint16_t length = voc_state_load(bsec_state);
+	if(voc.calibration_duration == AIR_QUALITY_DURATION_4_DAYS) {
+		bsec_set_configuration(voc_config_iaq_33v_3s_4d, BSEC_MAX_PROPERTY_BLOB_SIZE, voc.work_buffer, BSEC_MAX_PROPERTY_BLOB_SIZE);
+	} else {
+		bsec_set_configuration(voc_config_iaq_33v_3s_28d, BSEC_MAX_PROPERTY_BLOB_SIZE, voc.work_buffer, BSEC_MAX_PROPERTY_BLOB_SIZE);
+	}
+
 	if(length != 0) {
 		bsec_library_return_t status = bsec_set_state(bsec_state, length, bsec_state_work_buffer, BSEC_MAX_PROPERTY_BLOB_SIZE);
 		if(status != BSEC_OK) {
@@ -465,6 +482,16 @@ void voc_tick_task(void) {
 			timestamp_state = system_timer_get_ms();
 		}
 
+		if(voc.new_calibration_duration) {
+			voc.new_calibration_duration = false;
+			uint8_t bsec_state[BSEC_MAX_PROPERTY_BLOB_SIZE] = {0};
+			uint32_t bsec_state_length = 0;
+
+			// Set new calibration duration and invalidate old calibration
+			voc_state_save(bsec_state, bsec_state_length);
+			logd("Set new calibration duration: %d\n\r", voc.calibration_duration);
+		}
+
 		// Refresh timestamp and check how long we have to sleep
 		timestamp = voc_get_timestamp();
 		if(settings.next_call > timestamp) {
@@ -481,6 +508,7 @@ void voc_init(void) {
 	voc.bme680.read = voc_task_spi_read;
 	voc.bme680.write = voc_task_spi_write;
 	voc.bme680.delay_ms = coop_task_sleep_ms;
+	voc.calibration_duration = AIR_QUALITY_DURATION_28_DAYS;
 
 	// USIC channel configuration
 	const XMC_SPI_CH_CONFIG_t channel_config = {

@@ -45,6 +45,9 @@ void communication_init(void);
 #define AIR_QUALITY_THRESHOLD_OPTION_SMALLER '<'
 #define AIR_QUALITY_THRESHOLD_OPTION_GREATER '>'
 
+#define AIR_QUALITY_DURATION_4_DAYS 0
+#define AIR_QUALITY_DURATION_28_DAYS 1
+
 #define AIR_QUALITY_BOOTLOADER_MODE_BOOTLOADER 0
 #define AIR_QUALITY_BOOTLOADER_MODE_FIRMWARE 1
 #define AIR_QUALITY_BOOTLOADER_MODE_BOOTLOADER_WAIT_FOR_REBOOT 2
@@ -82,6 +85,8 @@ void communication_init(void);
 #define FID_SET_AIR_PRESSURE_CALLBACK_CONFIGURATION 20
 #define FID_GET_AIR_PRESSURE_CALLBACK_CONFIGURATION 21
 #define FID_REMOVE_CALIBRATION 23
+#define FID_SET_BACKGROUND_CALIBRATION_DURATION 24
+#define FID_GET_BACKGROUND_CALIBRATION_DURATION 25
 
 #define FID_CALLBACK_ALL_VALUES 6
 #define FID_CALLBACK_IAQ_INDEX 10
@@ -177,6 +182,20 @@ typedef struct {
 	TFPMessageHeader header;
 } __attribute__((__packed__)) RemoveCalibration;
 
+typedef struct {
+	TFPMessageHeader header;
+	uint8_t duration;
+} __attribute__((__packed__)) SetBackgroundCalibrationDuration;
+
+typedef struct {
+	TFPMessageHeader header;
+} __attribute__((__packed__)) GetBackgroundCalibrationDuration;
+
+typedef struct {
+	TFPMessageHeader header;
+	uint8_t duration;
+} __attribute__((__packed__)) GetBackgroundCalibrationDuration_Response;
+
 
 // Function prototypes
 BootloaderHandleMessageResponse get_all_values(const GetAllValues *data, GetAllValues_Response *response);
@@ -188,6 +207,8 @@ BootloaderHandleMessageResponse get_iaq_index(const GetIAQIndex *data, GetIAQInd
 BootloaderHandleMessageResponse set_iaq_index_callback_configuration(const SetIAQIndexCallbackConfiguration *data);
 BootloaderHandleMessageResponse get_iaq_index_callback_configuration(const GetIAQIndexCallbackConfiguration *data, GetIAQIndexCallbackConfiguration_Response *response);
 BootloaderHandleMessageResponse remove_calibration(const RemoveCalibration *data);
+BootloaderHandleMessageResponse set_background_calibration_duration(const SetBackgroundCalibrationDuration *data);
+BootloaderHandleMessageResponse get_background_calibration_duration(const GetBackgroundCalibrationDuration *data, GetBackgroundCalibrationDuration_Response *response);
 
 // Callbacks
 bool handle_all_values_callback(void);

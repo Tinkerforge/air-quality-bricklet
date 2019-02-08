@@ -52,6 +52,8 @@ BootloaderHandleMessageResponse handle_message(const void *message, void *respon
 		case FID_SET_AIR_PRESSURE_CALLBACK_CONFIGURATION: return set_callback_value_callback_configuration_int32_t(message, &callback_value_air_pressure);
 		case FID_GET_AIR_PRESSURE_CALLBACK_CONFIGURATION: return get_callback_value_callback_configuration_int32_t(message, response, &callback_value_air_pressure);
 		case FID_REMOVE_CALIBRATION: return remove_calibration(message);
+		case FID_SET_BACKGROUND_CALIBRATION_DURATION: return set_background_calibration_duration(message);
+		case FID_GET_BACKGROUND_CALIBRATION_DURATION: return get_background_calibration_duration(message, response);
 		default: return HANDLE_MESSAGE_RESPONSE_NOT_SUPPORTED;
 	}
 }
@@ -120,6 +122,27 @@ BootloaderHandleMessageResponse remove_calibration(const RemoveCalibration *data
 
 	return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
+
+BootloaderHandleMessageResponse set_background_calibration_duration(const SetBackgroundCalibrationDuration *data) {
+	if(data->duration > AIR_QUALITY_DURATION_28_DAYS) {
+		return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
+	}
+
+	if(voc.calibration_duration != data->duration) {
+		voc.calibration_duration = data->duration;
+		voc.new_calibration_duration = true;
+	}
+
+	return HANDLE_MESSAGE_RESPONSE_EMPTY;
+}
+
+BootloaderHandleMessageResponse get_background_calibration_duration(const GetBackgroundCalibrationDuration *data, GetBackgroundCalibrationDuration_Response *response) {
+	response->header.length = sizeof(GetBackgroundCalibrationDuration_Response);
+	response->duration      = voc.calibration_duration;
+
+	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
+}
+
 
 bool handle_all_values_callback(void) {
 	static bool is_buffered = false;
