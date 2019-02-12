@@ -7,7 +7,7 @@
 2019-01-04: 2.0.2 (9738be12)
 - Fix temperature offset (use 1/100 °C instead of °C)
 
-2019-02-12: 2.0.3 (TBD)
+2019-02-12: 2.0.3 (f99e0abf)
 - Update Bosch BSEC to v1.4.7.1
 - Add RemoveCalibration API
 - Add Set/GetBackroudCalibration API
