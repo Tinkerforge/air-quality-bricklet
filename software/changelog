@@ -12,6 +12,6 @@
 - Add RemoveCalibration API
 - Add Set/GetBackroudCalibration API
 
-2019-03-07: 2.0.4 (TBD)
+2019-03-07: 2.0.4 (6b40c6a5)
 - Disable automatic calibration load/save for now
   - This is broken in BSEC v1.4.7.1 and it is not clear when a fixed version will be released
