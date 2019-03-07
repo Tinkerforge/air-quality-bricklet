@@ -22,6 +22,8 @@
 #ifndef CONFIG_BME680_H
 #define CONFIG_BME680_H
 
+#define BME680_ENABLE_CALIBRATION   0
+
 #define BME680_SPI_BAUDRATE         400000
 #define BME680_USIC_CHANNEL         USIC0_CH1
 #define BME680_USIC                 XMC_SPI0_CH1

@@ -388,6 +388,7 @@ void voc_tick_task_init(void) {
 		bsec_set_configuration(voc_config_iaq_33v_3s_28d, BSEC_MAX_PROPERTY_BLOB_SIZE, voc.work_buffer, BSEC_MAX_PROPERTY_BLOB_SIZE);
 	}
 
+#if BME680_ENABLE_CALIBRATION
 	if(length != 0) {
 		bsec_library_return_t status = bsec_set_state(bsec_state, length, bsec_state_work_buffer, BSEC_MAX_PROPERTY_BLOB_SIZE);
 		if(status != BSEC_OK) {
@@ -398,6 +399,7 @@ void voc_tick_task_init(void) {
 	} else {
 		logd("No BSEC state found in flash\n\r");
 	}
+#endif
 
 	bsec_sensor_configuration_t requested_virtual_sensors[9];
 	uint8_t requested_virtual_sensors_num = 9;
@@ -463,6 +465,7 @@ void voc_tick_task(void) {
 			continue;
 		}
 
+#if BME680_ENABLE_CALIBRATION
 		// Update saved state if 12 hours are elapsed since last save
 		// At 50000 page erase cycles (see XMC1400 datasheet page 10.1.1) and 2 pages written per state save
 		// we expect the flash to live for about ~30 years of continuous usage.
@@ -481,6 +484,7 @@ void voc_tick_task(void) {
 
 			timestamp_state = system_timer_get_ms();
 		}
+#endif
 
 		if(voc.new_calibration_duration) {
 			voc.new_calibration_duration = false;
