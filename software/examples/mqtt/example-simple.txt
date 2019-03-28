@@ -3,4 +3,4 @@
 setup:
 	# Get current all values
 	subscribe to tinkerforge/response/air_quality_bricklet/XYZ/get_all_values
-	publish '' to tinkerforge/request/air_quality_bricklet/XYZ/get_all_values 
+	publish '' to tinkerforge/request/air_quality_bricklet/XYZ/get_all_values
