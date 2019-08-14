@@ -156,6 +156,9 @@ void voc_task_bsec_trigger_measurement(bsec_bme_settings_t *sensor_settings) {
 int8_t voc_task_bsec_read_data(int64_t time_stamp_trigger, bsec_input_t *inputs, uint8_t *num_bsec_inputs, int32_t bsec_process_data) {
 	static struct bme680_field_data data;
 	static float last_temperature = -10000;
+	static float last_pressure    = -10000;
+	static float last_humidity    = -10000;
+	static uint8_t return_counter = 0;
 
 	// We only have to read data if the previous call the bsec_sensor_control() asked for it
 	if(bsec_process_data) {
@@ -165,13 +168,35 @@ int8_t voc_task_bsec_read_data(int64_t time_stamp_trigger, bsec_input_t *inputs,
 			return result;
 		}
 
-		// Disallow unrealistic temperature changes
-		if(last_temperature != -10000) {
-			if(ABS(last_temperature - data.temperature) > 7.5) {
-				return -1;
+		// Disallow unrealistic temperature/humidity/pressure changes
+		// But if the peak stays for more then 5 cycles we accept it.
+		if(return_counter < 5) {
+			if(last_temperature != -10000) {
+				if(ABS(last_temperature - data.temperature) > 3) { // °C
+					return_counter++;
+					return -1;
+				}
+			}
+
+			if(last_pressure != -10000) {
+				if(ABS(last_pressure - data.pressure) > 10000) { // Pa
+					return_counter++;
+					return -1;
+				}
+			}
+
+			if(last_humidity != -10000) {
+				if(ABS(last_pressure - data.pressure) > 10) { // %RH
+					return_counter++;
+					return -1;
+				}
 			}
 		}
+
 		last_temperature = data.temperature;
+		last_pressure    = data.pressure;
+		last_humidity    = data.humidity;
+		return_counter   = 0;
 
 		if(data.status & BME680_NEW_DATA_MSK) {
 			// Pressure to be processed by BSEC
