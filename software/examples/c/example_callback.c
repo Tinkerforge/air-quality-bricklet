@@ -49,7 +49,7 @@ int main(void) {
 	// Register all values callback to function cb_all_values
 	air_quality_register_callback(&aq,
 	                              AIR_QUALITY_CALLBACK_ALL_VALUES,
-	                              (void *)cb_all_values,
+	                              (void (*)(void))cb_all_values,
 	                              NULL);
 
 	// Set period for all values callback to 1s (1000ms)
