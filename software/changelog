@@ -16,6 +16,6 @@
 - Disable automatic calibration load/save for now
   - This is broken in BSEC v1.4.7.1 and it is not clear when a fixed version will be released
 
-2019-08-13: 2.0.5 (TBD)
+2019-08-28: 2.0.5 (33d35f85)
 - Update Bosch BSEC to v1.4.7.4
 - Improve outlier value handling
