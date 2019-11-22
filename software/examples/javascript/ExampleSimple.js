@@ -36,7 +36,7 @@ ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
 
                 console.log('Temperature: ' + temperature/100.0 + ' °C');
                 console.log('Humidity: ' + humidity/100.0 + ' %RH');
-                console.log('Air Pressure: ' + airPressure/100.0 + ' mbar');
+                console.log('Air Pressure: ' + airPressure/100.0 + ' hPa');
             },
             function (error) {
                 console.log('Error: ' + error);

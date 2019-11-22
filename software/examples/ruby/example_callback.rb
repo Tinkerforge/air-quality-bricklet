@@ -35,7 +35,7 @@ aq.register_callback(BrickletAirQuality::CALLBACK_ALL_VALUES) do |iaq_index,
 
   puts "Temperature: #{temperature/100.0} °C"
   puts "Humidity: #{humidity/100.0} %RH"
-  puts "Air Pressure: #{air_pressure/100.0} mbar"
+  puts "Air Pressure: #{air_pressure/100.0} hPa"
   puts ''
 end
 

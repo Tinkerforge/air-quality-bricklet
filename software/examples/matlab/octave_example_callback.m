@@ -37,6 +37,6 @@ function cb_all_values(e)
 
     fprintf("Temperature: %g °C\n", e.temperature/100.0);
     fprintf("Humidity: %g %%RH\n", e.humidity/100.0);
-    fprintf("Air Pressure: %g mbar\n", e.airPressure/100.0);
+    fprintf("Air Pressure: %g hPa\n", e.airPressure/100.0);
     fprintf("\n");
 end

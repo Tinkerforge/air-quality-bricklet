@@ -35,7 +35,7 @@ public class ExampleCallback {
 
 				System.out.println("Temperature: " + temperature/100.0 + " °C");
 				System.out.println("Humidity: " + humidity/100.0 + " %RH");
-				System.out.println("Air Pressure: " + airPressure/100.0 + " mbar");
+				System.out.println("Air Pressure: " + airPressure/100.0 + " hPa");
 				System.out.println("");
 			}
 		});

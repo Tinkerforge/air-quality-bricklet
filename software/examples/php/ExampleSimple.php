@@ -33,7 +33,7 @@ if ($all_values['iaq_index_accuracy'] == BrickletAirQuality::ACCURACY_UNRELIABLE
 
 echo "Temperature: " . $all_values['temperature']/100.0 . " °C\n";
 echo "Humidity: " . $all_values['humidity']/100.0 . " %RH\n";
-echo "Air Pressure: " . $all_values['air_pressure']/100.0 . " mbar\n";
+echo "Air Pressure: " . $all_values['air_pressure']/100.0 . " hPa\n";
 
 echo "Press key to exit\n";
 fgetc(fopen('php://stdin', 'r'));

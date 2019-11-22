@@ -20,7 +20,7 @@ AllValuesCB[sender_,iaqIndex_,iaqIndexAccuracy_,temperature_,humidity_,airPressu
   If[iaqIndexAccuracy==Tinkerforge`BrickletAirQuality`ACCURACYUHIGH,Print["IAQ Index Accuracy: High"]];
   Print["Temperature: "<>ToString[N[Quantity[temperature,"°C/100"]]]];
   Print["Humidity: "<>ToString[N[Quantity[humidity,"%RH/100"]]]];
-  Print["Air Pressure: "<>ToString[N[Quantity[airPressure,"mbar/100"]]]]
+  Print["Air Pressure: "<>ToString[N[Quantity[airPressure,"hPa/100"]]]]
  ]
 
 AddEventHandler[aq@AllValuesCallback,AllValuesCB]

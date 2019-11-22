@@ -34,7 +34,7 @@ end
 
 puts "Temperature: #{all_values[2]/100.0} °C"
 puts "Humidity: #{all_values[3]/100.0} %RH"
-puts "Air Pressure: #{all_values[4]/100.0} mbar"
+puts "Air Pressure: #{all_values[4]/100.0} hPa"
 
 puts 'Press key to exit'
 $stdin.gets

@@ -30,7 +30,7 @@ Notebook[{
    RowBox[{"If", "[", RowBox[{RowBox[{"iaqIndexAccuracy", "==", "Tinkerforge`BrickletAirQuality`ACCURACYUHIGH"}], ",", RowBox[{"Print", "[", "\"\<IAQ Index Accuracy: High\>\"", "]"}]}], "]"}],
    RowBox[{"Print", "[", RowBox[{"\"\<Temperature: \>\"", "<>", RowBox[{"ToString", "[", RowBox[{"N", "[", RowBox[{"Quantity", "[", RowBox[{"temperature", ",", "\"\<\.b0C/100\>\""}], "]"}], "]"}], "]"}]}], "]"}],
    RowBox[{"Print", "[", RowBox[{"\"\<Humidity: \>\"", "<>", RowBox[{"ToString", "[", RowBox[{"N", "[", RowBox[{"Quantity", "[", RowBox[{"humidity", ",", "\"\<%RH/100\>\""}], "]"}], "]"}], "]"}]}], "]"}],
-   RowBox[{"Print", "[", RowBox[{"\"\<Air Pressure: \>\"", "<>", RowBox[{"ToString", "[", RowBox[{"N", "[", RowBox[{"Quantity", "[", RowBox[{"airPressure", ",", "\"\<mbar/100\>\""}], "]"}], "]"}], "]"}]}], "]"}],
+   RowBox[{"Print", "[", RowBox[{"\"\<Air Pressure: \>\"", "<>", RowBox[{"ToString", "[", RowBox[{"N", "[", RowBox[{"Quantity", "[", RowBox[{"airPressure", ",", "\"\<hPa/100\>\""}], "]"}], "]"}], "]"}]}], "]"}],
    RowBox[{"
 "}],
    RowBox[{"(*", "Clean up", "*)"}],

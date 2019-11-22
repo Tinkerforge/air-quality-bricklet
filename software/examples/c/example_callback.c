@@ -26,7 +26,7 @@ void cb_all_values(int32_t iaq_index, uint8_t iaq_index_accuracy, int32_t temper
 
 	printf("Temperature: %f °C\n", temperature/100.0);
 	printf("Humidity: %f %%RH\n", humidity/100.0);
-	printf("Air Pressure: %f mbar\n", air_pressure/100.0);
+	printf("Air Pressure: %f hPa\n", air_pressure/100.0);
 	printf("\n");
 }
 

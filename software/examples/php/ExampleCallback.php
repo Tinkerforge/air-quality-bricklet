@@ -28,7 +28,7 @@ function cb_allValues($iaq_index, $iaq_index_accuracy, $temperature, $humidity,
 
     echo "Temperature: " . $temperature/100.0 . " °C\n";
     echo "Humidity: " . $humidity/100.0 . " %RH\n";
-    echo "Air Pressure: " . $air_pressure/100.0 . " mbar\n";
+    echo "Air Pressure: " . $air_pressure/100.0 . " hPa\n";
     echo "\n";
 }
 

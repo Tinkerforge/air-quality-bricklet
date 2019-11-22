@@ -33,7 +33,7 @@ class Example
 
 		Console.WriteLine("Temperature: " + temperature/100.0 + " °C");
 		Console.WriteLine("Humidity: " + humidity/100.0 + " %RH");
-		Console.WriteLine("Air Pressure: " + airPressure/100.0 + " mbar");
+		Console.WriteLine("Air Pressure: " + airPressure/100.0 + " hPa");
 		Console.WriteLine("");
 	}
 

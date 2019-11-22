@@ -32,7 +32,7 @@ if __name__ == "__main__":
 
     print("Temperature: " + str(temperature/100.0) + " °C")
     print("Humidity: " + str(humidity/100.0) + " %RH")
-    print("Air Pressure: " + str(air_pressure/100.0) + " mbar")
+    print("Air Pressure: " + str(air_pressure/100.0) + " hPa")
 
     raw_input("Press key to exit\n") # Use input() in Python 3
     ipcon.disconnect()

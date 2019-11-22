@@ -28,7 +28,7 @@ function octave_example_simple()
 
     fprintf("Temperature: %g °C\n", allValues.temperature/100.0);
     fprintf("Humidity: %g %%RH\n", allValues.humidity/100.0);
-    fprintf("Air Pressure: %g mbar\n", allValues.airPressure/100.0);
+    fprintf("Air Pressure: %g hPa\n", allValues.airPressure/100.0);
 
     input("Press key to exit\n", "s");
     ipcon.disconnect();

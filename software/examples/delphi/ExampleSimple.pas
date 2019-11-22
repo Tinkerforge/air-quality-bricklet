@@ -56,7 +56,7 @@ begin
 
   WriteLn(Format('Temperature: %f °C', [temperature/100.0]));
   WriteLn(Format('Humidity: %f %%RH', [humidity/100.0]));
-  WriteLn(Format('Air Pressure: %f mbar', [airPressure/100.0]));
+  WriteLn(Format('Air Pressure: %f hPa', [airPressure/100.0]));
 
   WriteLn('Press key to exit');
   ReadLn;

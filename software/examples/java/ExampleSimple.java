@@ -35,7 +35,7 @@ public class ExampleSimple {
 
 		System.out.println("Temperature: " + allValues.temperature/100.0 + " °C");
 		System.out.println("Humidity: " + allValues.humidity/100.0 + " %RH");
-		System.out.println("Air Pressure: " + allValues.airPressure/100.0 + " mbar");
+		System.out.println("Air Pressure: " + allValues.airPressure/100.0 + " hPa");
 
 		System.out.println("Press key to exit"); System.in.read();
 		ipcon.disconnect();

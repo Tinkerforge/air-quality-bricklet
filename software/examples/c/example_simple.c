@@ -45,7 +45,7 @@ int main(void) {
 
 	printf("Temperature: %f °C\n", temperature/100.0);
 	printf("Humidity: %f %%RH\n", humidity/100.0);
-	printf("Air Pressure: %f mbar\n", air_pressure/100.0);
+	printf("Air Pressure: %f hPa\n", air_pressure/100.0);
 
 	printf("Press key to exit\n");
 	getchar();

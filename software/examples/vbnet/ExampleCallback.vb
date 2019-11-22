@@ -24,7 +24,7 @@ Module ExampleCallback
 
         Console.WriteLine("Temperature: " + (temperature/100.0).ToString() + " °C")
         Console.WriteLine("Humidity: " + (humidity/100.0).ToString() + " %RH")
-        Console.WriteLine("Air Pressure: " + (airPressure/100.0).ToString() + " mbar")
+        Console.WriteLine("Air Pressure: " + (airPressure/100.0).ToString() + " hPa")
         Console.WriteLine("")
     End Sub
 

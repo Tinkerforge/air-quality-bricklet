@@ -23,7 +23,7 @@ def cb_all_values(iaq_index, iaq_index_accuracy, temperature, humidity, air_pres
 
     print("Temperature: " + str(temperature/100.0) + " °C")
     print("Humidity: " + str(humidity/100.0) + " %RH")
-    print("Air Pressure: " + str(air_pressure/100.0) + " mbar")
+    print("Air Pressure: " + str(air_pressure/100.0) + " hPa")
     print("")
 
 if __name__ == "__main__":

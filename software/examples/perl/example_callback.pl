@@ -34,7 +34,7 @@ sub cb_all_values
 
     print "Temperature: " . $temperature/100.0 . " °C\n";
     print "Humidity: " . $humidity/100.0 . " %RH\n";
-    print "Air Pressure: " . $air_pressure/100.0 . " mbar\n";
+    print "Air Pressure: " . $air_pressure/100.0 . " hPa\n";
     print "\n";
 }
 
