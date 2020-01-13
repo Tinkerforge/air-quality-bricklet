@@ -34,5 +34,5 @@ if __name__ == "__main__":
     print("Humidity: " + str(humidity/100.0) + " %RH")
     print("Air Pressure: " + str(air_pressure/100.0) + " hPa")
 
-    raw_input("Press key to exit\n") # Use input() in Python 3
+    input("Press key to exit\n") # Use raw_input() in Python 2
     ipcon.disconnect()
