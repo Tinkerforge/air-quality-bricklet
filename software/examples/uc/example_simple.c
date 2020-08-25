@@ -1,14 +1,9 @@
-
-
 #include "bindings/hal_common.h"
 #include "bindings/bricklet_air_quality.h"
 
 #define UID "XYZ" // Change XYZ to the UID of your Air Quality Bricklet
 
 void check(int rc, const char* msg);
-
-
-
 
 TF_AirQuality aq;
 
