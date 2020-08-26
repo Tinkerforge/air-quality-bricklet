@@ -35,15 +35,13 @@ void example_setup(TF_HalContext *hal) {
 	// Create device object
 	check(tf_air_quality_create(&aq, UID, hal), "create device object");
 
-
 	// Register all values callback to function all_values_handler
 	tf_air_quality_register_all_values_callback(&aq,
-	                                           all_values_handler,
-	                                           NULL);
+	                                            all_values_handler,
+	                                            NULL);
 
 	// Set period for all values callback to 1s (1000ms)
 	tf_air_quality_set_all_values_callback_configuration(&aq, 1000, false);
-
 }
 
 void example_loop(TF_HalContext *hal) {

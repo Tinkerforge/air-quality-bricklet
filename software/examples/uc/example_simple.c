@@ -11,7 +11,6 @@ void example_setup(TF_HalContext *hal) {
 	// Create device object
 	check(tf_air_quality_create(&aq, UID, hal), "create device object");
 
-
 	// Get current all values
 	int32_t iaq_index, temperature, humidity, air_pressure; uint8_t iaq_index_accuracy;
 	check(tf_air_quality_get_all_values(&aq, &iaq_index, &iaq_index_accuracy,
@@ -33,7 +32,6 @@ void example_setup(TF_HalContext *hal) {
 	tf_hal_printf("Temperature: %d 1/%d °C\n", temperature, 100.0);
 	tf_hal_printf("Humidity: %d 1/%d %%RH\n", humidity, 100.0);
 	tf_hal_printf("Air Pressure: %d 1/%d hPa\n", air_pressure, 100.0);
-
 }
 
 void example_loop(TF_HalContext *hal) {
