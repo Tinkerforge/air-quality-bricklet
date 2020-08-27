@@ -5,10 +5,14 @@
 
 void check(int rc, const char* msg);
 
+void example_setup(TF_HalContext *hal);
+void example_loop(TF_HalContext *hal);
+
+
 // Callback function for all values callback
-void all_values_handler(TF_AirQuality *device, int32_t iaq_index,
-                        uint8_t iaq_index_accuracy, int32_t temperature, int32_t humidity,
-                        int32_t air_pressure, void *user_data) {
+static void all_values_handler(TF_AirQuality *device, int32_t iaq_index,
+                               uint8_t iaq_index_accuracy, int32_t temperature,
+                               int32_t humidity, int32_t air_pressure, void *user_data) {
 	(void)device; (void)user_data; // avoid unused parameter warning
 
 	tf_hal_printf("IAQ Index: %d\n", iaq_index);
@@ -29,7 +33,7 @@ void all_values_handler(TF_AirQuality *device, int32_t iaq_index,
 	tf_hal_printf("\n");
 }
 
-TF_AirQuality aq;
+static TF_AirQuality aq;
 
 void example_setup(TF_HalContext *hal) {
 	// Create device object
