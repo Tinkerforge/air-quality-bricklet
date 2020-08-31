@@ -15,7 +15,7 @@ static void all_values_handler(TF_AirQuality *device, int32_t iaq_index,
                                int32_t humidity, int32_t air_pressure, void *user_data) {
 	(void)device; (void)user_data; // avoid unused parameter warning
 
-	tf_hal_printf("IAQ Index: %d\n", iaq_index);
+	tf_hal_printf("IAQ Index: %I32d\n", iaq_index);
 
 	if(iaq_index_accuracy == TF_AIR_QUALITY_ACCURACY_UNRELIABLE) {
 		tf_hal_printf("IAQ Index Accuracy: Unreliable\n");

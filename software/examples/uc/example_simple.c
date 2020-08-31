@@ -21,7 +21,7 @@ void example_setup(TF_HalContext *hal) {
 	                                    &temperature, &humidity,
 	                                    &air_pressure), "get all values");
 
-	tf_hal_printf("IAQ Index: %d\n", iaq_index);
+	tf_hal_printf("IAQ Index: %I32d\n", iaq_index);
 
 	if(iaq_index_accuracy == TF_AIR_QUALITY_ACCURACY_UNRELIABLE) {
 		tf_hal_printf("IAQ Index Accuracy: Unreliable\n");
