@@ -37,9 +37,9 @@ void example_setup(TF_HalContext *hal) {
 		tf_hal_printf("IAQ Index Accuracy: High\n");
 	}
 
-	tf_hal_printf("Temperature: %d 1/%d °C\n", temperature, 100.0);
-	tf_hal_printf("Humidity: %d 1/%d %%RH\n", humidity, 100.0);
-	tf_hal_printf("Air Pressure: %d 1/%d hPa\n", air_pressure, 100.0);
+	tf_hal_printf("Temperature: %d 1/%d °C\n", temperature, 100);
+	tf_hal_printf("Humidity: %d 1/%d %%RH\n", humidity, 100);
+	tf_hal_printf("Air Pressure: %d 1/%d hPa\n", air_pressure, 100);
 }
 
 void example_loop(TF_HalContext *hal) {
