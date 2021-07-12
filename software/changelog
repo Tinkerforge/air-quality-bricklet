@@ -19,3 +19,6 @@
 2019-08-28: 2.0.5 (33d35f85)
 - Update Bosch BSEC to v1.4.7.4
 - Improve outlier value handling
+
+2021-07-12 2.0.6 (TBD)
+- Update Bosch BSEC to v1.4.8.0
