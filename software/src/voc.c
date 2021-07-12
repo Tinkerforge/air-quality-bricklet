@@ -322,20 +322,15 @@ bsec_library_return_t voc_task_bsec_process_data(bsec_input_t *bsec_inputs, uint
 uint16_t voc_state_load(uint8_t *data) {
 	uint32_t page[EEPROM_PAGE_SIZE/sizeof(uint32_t)];
 	bootloader_read_eeprom_page(VOC_STATE_DATA1_PAGE, page);
-	memcpy(data, page, EEPROM_PAGE_SIZE);
+	memcpy(data, page, BSEC_MAX_STATE_BLOB_SIZE);
 
 	uint32_t checksum = 0;
-	for(uint8_t i = 0; i < EEPROM_PAGE_SIZE/sizeof(uint32_t); i++) {
+	for(uint8_t i = 0; i < EEPROM_PAGE_SIZE/sizeof(uint32_t)-1; i++) {
 		checksum ^= page[i];
 	}
 
-	bootloader_read_eeprom_page(VOC_STATE_DATA2_PAGE, page);
-	memcpy(data+EEPROM_PAGE_SIZE, page, BSEC_MAX_PROPERTY_BLOB_SIZE-EEPROM_PAGE_SIZE);
-	for(uint8_t i = 0; i < (BSEC_MAX_PROPERTY_BLOB_SIZE-EEPROM_PAGE_SIZE)/sizeof(uint32_t); i++) {
-		checksum ^= page[i];
-	}
-
-	if((page[VOC_STATE_INFO_MAGIC_POS] == VOC_STATE_MAGIC) && (page[VOC_STATE_INFO_CHECKSUM_POS] == checksum) && (page[VOC_STATE_INFO_LENGTH_POS] <= BSEC_MAX_PROPERTY_BLOB_SIZE)) {
+	logd("voc_state_load: magic %d, length %d, checksum %d, duration %d\n\r", page[VOC_STATE_INFO_MAGIC_POS], page[VOC_STATE_INFO_LENGTH_POS], page[VOC_STATE_INFO_CHECKSUM_POS], page[VOC_STATE_INFO_DURATION_POS]);
+	if((page[VOC_STATE_INFO_MAGIC_POS] == VOC_STATE_MAGIC) && (page[VOC_STATE_INFO_CHECKSUM_POS] == checksum) && (page[VOC_STATE_INFO_LENGTH_POS] <= BSEC_MAX_STATE_BLOB_SIZE)) {
 		if(page[VOC_STATE_INFO_DURATION_POS] == AIR_QUALITY_DURATION_4_DAYS) {
 			voc.calibration_duration = AIR_QUALITY_DURATION_4_DAYS;
 		} else {
@@ -368,27 +363,23 @@ void voc_state_save(uint8_t *data, const uint16_t length) {
 	uint32_t page[EEPROM_PAGE_SIZE/sizeof(uint32_t)];
 
 	// Write first data page and calculate checksum
-	memcpy(page, data, EEPROM_PAGE_SIZE);
+	memset(page, 0, EEPROM_PAGE_SIZE);
+	memcpy(page, data, length); // max length is BSEC_MAX_STATE_BLOB_SIZE
 	bootloader_write_eeprom_page(VOC_STATE_DATA1_PAGE, page);
+
+	// Write magic, length and checksum to end of first page
+	page[VOC_STATE_INFO_DURATION_POS] = voc.calibration_duration;
+	page[VOC_STATE_INFO_MAGIC_POS]	  = VOC_STATE_MAGIC;
+	page[VOC_STATE_INFO_LENGTH_POS]   = length;
 	uint32_t checksum = 0;
 	for(uint8_t i = 0; i < EEPROM_PAGE_SIZE/sizeof(uint32_t); i++) {
 		checksum ^= page[i];
 	}
-
-	// Write second data page and calculate checksum
-	memset(page, 0, EEPROM_PAGE_SIZE);
-	memcpy(page, data + EEPROM_PAGE_SIZE, BSEC_MAX_PROPERTY_BLOB_SIZE-EEPROM_PAGE_SIZE);
-	for(uint8_t i = 0; i < (BSEC_MAX_PROPERTY_BLOB_SIZE-EEPROM_PAGE_SIZE)/sizeof(uint32_t); i++) {
-		checksum ^= page[i];
-	}
-
-	// Write magic, length and checksum to second page
-	page[VOC_STATE_INFO_MAGIC_POS]	  = VOC_STATE_MAGIC;
-	page[VOC_STATE_INFO_LENGTH_POS]   = length;
 	page[VOC_STATE_INFO_CHECKSUM_POS] = checksum;
-	page[VOC_STATE_INFO_DURATION_POS] = voc.calibration_duration;
 
-	bootloader_write_eeprom_page(VOC_STATE_DATA2_PAGE, page);
+	logd("voc_state_save: magic %d, length %d, checksum %d, duration %d\n\r", VOC_STATE_MAGIC, length, checksum, voc.calibration_duration);
+
+	bootloader_write_eeprom_page(VOC_STATE_DATA1_PAGE, page);
 }
 
 void voc_tick_task_init(void) {
@@ -402,20 +393,20 @@ void voc_tick_task_init(void) {
 	ret = bsec_get_version(&bsec_version_p);
 	logd("BME680 BSEC version: %d.%d.%d.%d\n\r", bsec_version_p.major, bsec_version_p.minor, bsec_version_p.major_bugfix, bsec_version_p.minor_bugfix);
 
-	// Load previous BSEC state (if available) and use it
-	uint8_t bsec_state[BSEC_MAX_PROPERTY_BLOB_SIZE];
-	uint8_t bsec_state_work_buffer[BSEC_MAX_PROPERTY_BLOB_SIZE];
-
-	uint16_t length = voc_state_load(bsec_state);
 	if(voc.calibration_duration == AIR_QUALITY_DURATION_4_DAYS) {
-		bsec_set_configuration(voc_config_iaq_33v_3s_4d, BSEC_MAX_PROPERTY_BLOB_SIZE, voc.work_buffer, BSEC_MAX_PROPERTY_BLOB_SIZE);
+		bsec_set_configuration(voc_config_iaq_33v_3s_4d, BSEC_MAX_PROPERTY_BLOB_SIZE, voc.work_buffer, BSEC_MAX_WORKBUFFER_SIZE);
 	} else {
-		bsec_set_configuration(voc_config_iaq_33v_3s_28d, BSEC_MAX_PROPERTY_BLOB_SIZE, voc.work_buffer, BSEC_MAX_PROPERTY_BLOB_SIZE);
+		bsec_set_configuration(voc_config_iaq_33v_3s_28d, BSEC_MAX_PROPERTY_BLOB_SIZE, voc.work_buffer, BSEC_MAX_WORKBUFFER_SIZE);
 	}
 
 #if BME680_ENABLE_CALIBRATION
+	// Load previous BSEC state (if available) and use it
+	uint8_t bsec_state[BSEC_MAX_STATE_BLOB_SIZE];
+	uint8_t bsec_state_work_buffer[BSEC_MAX_WORKBUFFER_SIZE];
+
+	uint16_t length = voc_state_load(bsec_state);
 	if(length != 0) {
-		bsec_library_return_t status = bsec_set_state(bsec_state, length, bsec_state_work_buffer, BSEC_MAX_PROPERTY_BLOB_SIZE);
+		bsec_library_return_t status = bsec_set_state(bsec_state, length, bsec_state_work_buffer, BSEC_MAX_WORKBUFFER_SIZE);
 		if(status != BSEC_OK) {
 			logw("Unexpected status during state set: %d\n\r", status);
 		} else {
@@ -495,11 +486,11 @@ void voc_tick_task(void) {
 		// At 50000 page erase cycles (see XMC1400 datasheet page 10.1.1) and 2 pages written per state save
 		// we expect the flash to live for about ~30 years of continuous usage.
 		if(system_timer_is_time_elapsed_ms(timestamp_state, 1000*60*60*12)) {
-			uint8_t bsec_state[BSEC_MAX_PROPERTY_BLOB_SIZE];
-			uint8_t bsec_state_work_buffer[BSEC_MAX_PROPERTY_BLOB_SIZE];
+			uint8_t bsec_state[BSEC_MAX_STATE_BLOB_SIZE];
+			uint8_t bsec_state_work_buffer[BSEC_MAX_WORKBUFFER_SIZE];
 			uint32_t bsec_state_length = 0;
 			
-			bsec_library_return_t status = bsec_get_state(0, bsec_state, BSEC_MAX_PROPERTY_BLOB_SIZE, bsec_state_work_buffer, BSEC_MAX_PROPERTY_BLOB_SIZE, &bsec_state_length);
+			bsec_library_return_t status = bsec_get_state(0, bsec_state, BSEC_MAX_STATE_BLOB_SIZE, bsec_state_work_buffer, BSEC_MAX_WORKBUFFER_SIZE, &bsec_state_length);
 			if(status == BSEC_OK) {
 				voc_state_save(bsec_state, bsec_state_length);
 				logd("New state saved, time: %u\n\r", timestamp_state);
@@ -513,7 +504,7 @@ void voc_tick_task(void) {
 
 		if(voc.new_calibration_duration) {
 			voc.new_calibration_duration = false;
-			uint8_t bsec_state[BSEC_MAX_PROPERTY_BLOB_SIZE] = {0};
+			uint8_t bsec_state[BSEC_MAX_STATE_BLOB_SIZE] = {0};
 			uint32_t bsec_state_length = 0;
 
 			// Set new calibration duration and invalidate old calibration

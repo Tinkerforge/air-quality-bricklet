@@ -45,7 +45,7 @@
 // that the old calibration is discarded and a new one is started.
 // We need to do this since we updated the BSEC and it seems like
 // the old calibration data is not compatible.
-#define VOC_STATE_MAGIC             (0x12345678 + 1)
+#define VOC_STATE_MAGIC             (0x12345678 + 2)
 
 typedef struct {
 	struct bme680_dev bme680;
@@ -55,7 +55,7 @@ typedef struct {
 	uint8_t data_write_index;
 	uint16_t data_length;
 
-	uint8_t work_buffer[BSEC_MAX_PROPERTY_BLOB_SIZE];
+	uint8_t work_buffer[BSEC_MAX_WORKBUFFER_SIZE];
 
 	int32_t compensated_humidity;
 	int32_t compensated_temperature;
