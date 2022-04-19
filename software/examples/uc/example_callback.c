@@ -9,8 +9,8 @@
 
 void check(int rc, const char* msg);
 
-void example_setup(TF_HalContext *hal);
-void example_loop(TF_HalContext *hal);
+void example_setup(TF_HAL *hal);
+void example_loop(TF_HAL *hal);
 
 
 // Callback function for all values callback
@@ -21,13 +21,13 @@ static void all_values_handler(TF_AirQuality *device, int32_t iaq_index,
 
 	tf_hal_printf("IAQ Index: %I32d\n", iaq_index);
 
-	if(iaq_index_accuracy == TF_AIR_QUALITY_ACCURACY_UNRELIABLE) {
+	if (iaq_index_accuracy == TF_AIR_QUALITY_ACCURACY_UNRELIABLE) {
 		tf_hal_printf("IAQ Index Accuracy: Unreliable\n");
-	} else if(iaq_index_accuracy == TF_AIR_QUALITY_ACCURACY_LOW) {
+	} else if (iaq_index_accuracy == TF_AIR_QUALITY_ACCURACY_LOW) {
 		tf_hal_printf("IAQ Index Accuracy: Low\n");
-	} else if(iaq_index_accuracy == TF_AIR_QUALITY_ACCURACY_MEDIUM) {
+	} else if (iaq_index_accuracy == TF_AIR_QUALITY_ACCURACY_MEDIUM) {
 		tf_hal_printf("IAQ Index Accuracy: Medium\n");
-	} else if(iaq_index_accuracy == TF_AIR_QUALITY_ACCURACY_HIGH) {
+	} else if (iaq_index_accuracy == TF_AIR_QUALITY_ACCURACY_HIGH) {
 		tf_hal_printf("IAQ Index Accuracy: High\n");
 	}
 
@@ -39,7 +39,7 @@ static void all_values_handler(TF_AirQuality *device, int32_t iaq_index,
 
 static TF_AirQuality aq;
 
-void example_setup(TF_HalContext *hal) {
+void example_setup(TF_HAL *hal) {
 	// Create device object
 	check(tf_air_quality_create(&aq, UID, hal), "create device object");
 
@@ -52,7 +52,7 @@ void example_setup(TF_HalContext *hal) {
 	tf_air_quality_set_all_values_callback_configuration(&aq, 1000, false);
 }
 
-void example_loop(TF_HalContext *hal) {
+void example_loop(TF_HAL *hal) {
 	// Poll for callbacks
 	tf_hal_callback_tick(hal, 0);
 }
