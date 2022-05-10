@@ -21,7 +21,7 @@ func main() {
 	// Get current all values.
 	iaqIndex, iaqIndexAccuracy, temperature, humidity, airPressure, _ := aq.GetAllValues()
 
-	fmt.Printf("IAQ Index: \n", iaqIndex)
+	fmt.Printf("IAQ Index: %d\n", iaqIndex)
 
 	if iaqIndexAccuracy == air_quality_bricklet.AccuracyUnreliable {
 		fmt.Println("IAQ Index Accuracy: Unreliable")
